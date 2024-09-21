@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart'; // Import the flutter_svg package
 
 class HomeScreen extends StatefulWidget {
@@ -13,7 +12,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 248, 249, 250),
+      backgroundColor: const Color.fromARGB(255, 241, 241, 241),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -24,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: kcontentColor,
+                      backgroundColor: Colors.white,
                       padding: const EdgeInsets.all(20),
                     ),
                     onPressed: () {},
@@ -35,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   IconButton(
                     style: IconButton.styleFrom(
-                      backgroundColor: kcontentColor,
+                      backgroundColor: Colors.white,
                       padding: const EdgeInsets.all(20),
                     ),
                     onPressed: () {},

@@ -24,7 +24,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 248, 249, 250),
+      backgroundColor: const Color.fromARGB(255, 241, 241, 241),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           setState(() {
