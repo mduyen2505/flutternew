@@ -45,7 +45,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         height: 60,
         color: Colors.white,
         shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
+        notchMargin: 12,
         clipBehavior: Clip.antiAliasWithSaveLayer,
         child: Row(
           mainAxisSize: MainAxisSize.max,
