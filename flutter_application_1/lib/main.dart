@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/presentation/splash/pages/splash.dart';
+import 'package:flutter_application_1/screens/nav_bar_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'screens/nav_bar_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +12,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
-      textTheme: GoogleFonts.mulishTextTheme(),
-    ),
-    home: const BottomNavBar(),
-  );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: GoogleFonts.mulishTextTheme(),
+        ),
+        home: const SplashScreen(),
+      );
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _navigateToHome();
+  }
+
+  _navigateToHome() async {
+    await Future.delayed(const Duration(seconds: 4));
+
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const BottomNavBar()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return const SplashPage(); // Gọi SplashPage từ file riêng
+  }
 }

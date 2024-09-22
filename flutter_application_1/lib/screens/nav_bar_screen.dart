@@ -9,6 +9,8 @@ class BottomNavBar extends StatefulWidget {
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
+
+  appStarted() {}
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
