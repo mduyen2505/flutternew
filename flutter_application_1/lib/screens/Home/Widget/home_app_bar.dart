@@ -34,7 +34,7 @@ class CustomAppBar extends StatelessWidget {
                 'Store location',
                 style: TextStyle(
                   color: Color(0xFF707B81),
-                  fontSize: 16,
+                  fontSize: 14,
                   fontFamily: 'Airbnb Cereal App',
                   fontWeight: FontWeight.w400,
                   height: 0.11,
@@ -47,7 +47,7 @@ class CustomAppBar extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
-                    width: 18,
+                    width: 16,
                     height: 18,
                     child: SvgPicture.asset(
                       "images/map-point-svgrepo-com.svg",
@@ -55,12 +55,12 @@ class CustomAppBar extends StatelessWidget {
                       width: 18,
                     ),
                   ),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: 3),
                   const Text(
                     'Mondolibug, Sylhet',
                     style: TextStyle(
                       color: Color(0xFF1A242F),
-                      fontSize: 18,
+                      fontSize: 16,
                       fontFamily: 'Airbnb Cereal App',
                       fontWeight: FontWeight.w500,
                       height: 0.10,

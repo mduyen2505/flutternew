@@ -108,8 +108,7 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
                     updateSelectedBrand(brandName);
                   },
                   child: Container(
-                    padding: const EdgeInsets.only(
-                        top: 6, left: 6, right: 16, bottom: 6),
+                    padding: const EdgeInsets.only(left: 6, right: 16),
                     decoration: ShapeDecoration(
                       color: selectedBrand == brandName
                           ? kprimaryColor

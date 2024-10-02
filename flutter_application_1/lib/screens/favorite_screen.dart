@@ -5,6 +5,16 @@ class FavoriteScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Center(
+        child: Container(
+          color: Colors.black,
+          child: const Placeholder(
+              // color: Colors.white,
+
+              ),
+        ),
+      ),
+    );
   }
 }
