@@ -15,6 +15,7 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar> {
   int currentIndex = 0;
+
   List screens = const [
     HomeScreen(),
     FavoriteScreen(),
@@ -29,22 +30,38 @@ class _BottomNavBarState extends State<BottomNavBar> {
       extendBody: true,
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            currentIndex = 2;
-          });
-        },
-        shape: const CircleBorder(),
-        backgroundColor: kprimaryColor,
-        child: SvgPicture.asset(
-          'images/icons/cart-2-svgrepo-com.svg',
-          width: 35,
-          height: 35,
-          colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: kprimaryColor.withOpacity(0.22), // Màu bóng mờ
+              spreadRadius:4, // Độ lan của bóng
+              blurRadius:6 , // Độ mờ của bóng
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              currentIndex = 2;
+            });
+          },
+          shape: const CircleBorder(),
+          backgroundColor: kprimaryColor,
+          child: SvgPicture.asset(
+            'images/icons/cart-2-svgrepo-com.svg',
+            width: 35,
+            height: 35,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+          ),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      // Thanh điều hướng dưới cùng
       bottomNavigationBar: BottomAppBar(
         elevation: 1,
         height: 60,
@@ -126,6 +143,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ],
         ),
       ),
+
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) =>
             SharedAxisTransition(
