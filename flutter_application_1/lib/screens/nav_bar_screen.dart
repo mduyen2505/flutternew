@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants.dart';
 import 'package:flutter_application_1/screens/Cart/cart_screen.dart';
 import 'package:flutter_application_1/screens/Home/home_screen.dart';
+import 'package:flutter_application_1/screens/Menu/menu_user.dart';
 import 'package:flutter_application_1/screens/favorite_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -21,7 +22,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     FavoriteScreen(),
     CartScreen(),
     Scaffold(),
-    Scaffold(),
+    MenuUser(),
   ];
 
   @override
@@ -36,9 +37,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: kprimaryColor.withOpacity(0.22), // Màu bóng mờ
-              spreadRadius:4, // Độ lan của bóng
-              blurRadius:6 , // Độ mờ của bóng
+              color: kprimaryColor.withOpacity(0.22),
+              spreadRadius: 4,
+              blurRadius: 6,
               offset: const Offset(0, 5),
             ),
           ],

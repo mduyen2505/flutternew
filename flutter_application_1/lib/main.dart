@@ -14,6 +14,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          
           textTheme: GoogleFonts.mulishTextTheme(),
         ),
         home: const SplashScreen(),
@@ -35,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 4));
+    await Future.delayed(const Duration(seconds: 3));
 
     if (!mounted) return;
 
@@ -47,6 +49,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const SplashPage(); // Gọi SplashPage từ file riêng
+    return const SplashPage();
   }
 }
