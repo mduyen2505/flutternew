@@ -1,33 +1,32 @@
-
-
 import 'package:flutter/material.dart';
 
 class SizeConfig {
-  static MediaQueryData _mediaQueryData;
-  static double screenWidth;
-  static double screenHeight;
-  static double defaultSize;
-  static Orientation orientation;
+  static MediaQueryData? _mediaQueryData;
+  static double? screenWidth;
+  static double? screenHeight;
+  static Orientation? orientation;
 
-  void init(BuildContext context) {
+  // Hàm khởi tạo
+  static void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
-    screenWidth = _mediaQueryData.size.width;
-    screenHeight = _mediaQueryData.size.height;
-    orientation = _mediaQueryData.orientation;
+    screenWidth = _mediaQueryData!.size.width;
+    screenHeight = _mediaQueryData!.size.height;
+    orientation = _mediaQueryData!.orientation;
+
+    // Thêm kiểm tra nếu cần thiết
+    assert(screenWidth != null);
+    assert(screenHeight != null);
   }
 }
 
-
-//Get the proportionate height as per screen size
+// Lấy chiều cao tỷ lệ theo kích thước màn hình
 double getProportionateScreenHeight(double inputHeight) {
-  double screenHeight = SizeConfig.screenHeight;
-  // 812 is the layout height that designer use
+  double screenHeight = SizeConfig.screenHeight ?? 812.0; // Giá trị mặc định
   return (inputHeight / 812.0) * screenHeight;
 }
 
-//Get the proportionate height as per screen size
+// Lấy chiều rộng tỷ lệ theo kích thước màn hình
 double getProportionateScreenWidth(double inputWidth) {
-  double screenWidth = SizeConfig.screenWidth;
-  // 375 is the layout width that designer use
+  double screenWidth = SizeConfig.screenWidth ?? 375.0; // Giá trị mặc định
   return (inputWidth / 375.0) * screenWidth;
 }
