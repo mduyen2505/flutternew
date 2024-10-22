@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/Auth/screeens/onboarding.dart';
 import 'package:flutter_application_1/presentation/splash/pages/splash.dart';
 import 'package:flutter_application_1/screens/nav_bar_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
