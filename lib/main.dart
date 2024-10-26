@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // Import thư viện này
 import 'package:flutter_application_1/screens/Auth/screeens/onboarding.dart';
 import 'package:flutter_application_1/presentation/splash/pages/splash.dart';
 import 'package:flutter_application_1/screens/nav_bar_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Khóa xoay màn hình
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // Chỉ cho phép màn hình dọc
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +24,6 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
-          
           textTheme: GoogleFonts.mulishTextTheme(),
         ),
         home: const SplashScreen(),

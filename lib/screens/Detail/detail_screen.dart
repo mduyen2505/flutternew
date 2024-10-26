@@ -5,7 +5,7 @@ import 'package:flutter_application_1/screens/Detail/Widget/description.dart';
 import 'package:flutter_application_1/screens/Detail/Widget/detail_app_bar.dart';
 import 'package:flutter_application_1/screens/Detail/Widget/image_slider.dart';
 import 'package:flutter_application_1/screens/Detail/Widget/items_details.dart';
-import 'package:flutter_application_1/screens/Home/Du_lieu_gia/computer_model.dart';
+import 'package:flutter_application_1/models/computer_model.dart';
 
 class DetailScreen extends StatefulWidget {
   final Computer popularComputerBar;

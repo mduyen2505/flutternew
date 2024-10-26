@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/constants.dart';
-import 'package:flutter_application_1/screens/Home/Du_lieu_gia/computer_model.dart';
+import 'package:flutter_application_1/models/computer_model.dart';
 
 class ItemsDetails extends StatelessWidget {
   final Computer popularComputerBar;
