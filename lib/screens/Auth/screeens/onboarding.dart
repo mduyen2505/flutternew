@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
+
 import 'widgets/body_1.dart';
 import 'widgets/body_2.dart';
 import 'widgets/body_3.dart';
-import 'widgets/body_4.dart';
-import 'widgets/welcome_header.dart';
 import 'widgets/custom_navigation_bar.dart';
 import 'widgets/next_page.dart';
+import 'widgets/welcome_header.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
 
   @override
-  OnboardingState createState() => OnboardingState(); // Đổi tên ở đây
+  OnboardingState createState() => OnboardingState();
 }
 
-class OnboardingState extends State<Onboarding> { // Đổi tên ở đây
+class OnboardingState extends State<Onboarding> {
   late PageController _pageController;
   int _currentPage = 0;
 
@@ -37,7 +37,7 @@ class OnboardingState extends State<Onboarding> { // Đổi tên ở đây
   }
 
   void _nextPage() {
-    if (_currentPage < 3) { // Chỉ số tối đa là 3 cho 4 trang
+    if (_currentPage < 2) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -51,7 +51,7 @@ class OnboardingState extends State<Onboarding> { // Đổi tên ở đây
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          const WelcomeHeader(), // Đảm bảo WelcomeHeader nằm ở đây
+          const WelcomeHeader(),
           Column(
             children: [
               Expanded(
@@ -62,11 +62,9 @@ class OnboardingState extends State<Onboarding> { // Đổi tên ở đây
                     Body1(),
                     Body2(),
                     Body3(),
-                    Body4(),
                   ],
                 ),
               ),
-              // Sử dụng Row để sắp xếp CustomNavigationBar và NextPage
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

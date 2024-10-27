@@ -38,43 +38,43 @@ class ItemsDetails extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 // Đánh giá
-                Row(
-                  children: [
-                    Container(
-                      width: 55,
-                      height: 25,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        color: kprimaryColor,
-                      ),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.star,
-                            size: 15,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 3),
-                          Text(
-                            popularComputerBar.rate.toString(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 5,), Text(popularComputerBar.review,style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 15,
-                    ),)
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Container(
+                //       width: 55,
+                //       height: 25,
+                //       decoration: BoxDecoration(
+                //         borderRadius: BorderRadius.circular(15),
+                //         color: kprimaryColor,
+                //       ),
+                //       alignment: Alignment.center,
+                //       padding: const EdgeInsets.symmetric(horizontal: 5),
+                //       child: Row(
+                //         mainAxisSize: MainAxisSize.min,
+                //         children: [
+                //           const Icon(
+                //             Icons.star,
+                //             size: 15,
+                //             color: Colors.white,
+                //           ),
+                //           const SizedBox(width: 3),
+                //           Text(
+                //             popularComputerBar.rate.toString(),
+                //             style: const TextStyle(
+                //               fontWeight: FontWeight.bold,
+                //               color: Colors.white,
+                //               fontSize: 14,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //     ),
+                //     const SizedBox(width: 5,), Text(popularComputerBar.review,style: const TextStyle(
+                //       color: Colors.grey,
+                //       fontSize: 15,
+                //     ),)
+                //   ],
+                // ),
               ],
             ),
           ],

@@ -36,7 +36,7 @@ class _DetailScreenState extends State<DetailScreen> {
               // nut tro ve va yeu thich
               const DetailAppBar(),
               MyImageSlider(
-                image:  widget.popularComputerBar.imagePath,
+                image:  widget.popularComputerBar.image,
                 onChange: (index) {
                   setState(() {
                     currentImage = index;
@@ -85,55 +85,55 @@ class _DetailScreenState extends State<DetailScreen> {
                     ItemsDetails(popularComputerBar: widget.popularComputerBar),
 
                     // phan color 
-
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Color",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
-                    ),
-                      const SizedBox(height: 20),
-                    Row(
-                      children: List.generate(
-                        widget.popularComputerBar.colors.length,
-                        (index) => GestureDetector(
-                          onTap: (){
-                            setState(() {
-                              currentColor = index;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds:300
-                           ),
-                           width: 40,
-                           height: 40, 
-                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: currentColor == index
-                                  ? Colors.white
-                                  : widget.popularComputerBar.colors[index],                         
-                            border:currentColor ==index ?
-                             Border.all(
-                              color: widget.popularComputerBar.colors[index],
-                              ) 
-                              : null,
-                              ),
-                              padding: currentColor == index
-                              ? const EdgeInsets.all(2)
-                              :null,
-                              margin: const EdgeInsets.only(right: 10),
-                              child: Container(
-                                width: 35,
-                                height: 35,
-                                decoration: BoxDecoration(
-                                color: widget.popularComputerBar.colors[index],
-                                shape: BoxShape.circle,
-                                ),
-                              ),
-                           ),
-                        )
-                      )
-                      ,
-                    ),
+                    
+                    // const SizedBox(height: 20),
+                    // const Text(
+                    //   "Color",
+                    //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+                    // ),
+                    //   const SizedBox(height: 20),
+                    // Row(
+                    //   children: List.generate(
+                    //     widget.popularComputerBar.colors.length,
+                    //     (index) => GestureDetector(
+                    //       onTap: (){
+                    //         setState(() {
+                    //           currentColor = index;
+                    //         });
+                    //       },
+                    //       child: AnimatedContainer(
+                    //         duration: const Duration(milliseconds:300
+                    //        ),
+                    //        width: 40,
+                    //        height: 40, 
+                    //        decoration: BoxDecoration(
+                    //         shape: BoxShape.circle,
+                    //         color: currentColor == index
+                    //               ? Colors.white
+                    //               : widget.popularComputerBar.colors[index],                         
+                    //         border:currentColor ==index ?
+                    //          Border.all(
+                    //           color: widget.popularComputerBar.colors[index],
+                    //           ) 
+                    //           : null,
+                    //           ),
+                    //           padding: currentColor == index
+                    //           ? const EdgeInsets.all(2)
+                    //           :null,
+                    //           margin: const EdgeInsets.only(right: 10),
+                    //           child: Container(
+                    //             width: 35,
+                    //             height: 35,
+                    //             decoration: BoxDecoration(
+                    //             color: widget.popularComputerBar.colors[index],
+                    //             shape: BoxShape.circle,
+                    //             ),
+                    //           ),
+                    //        ),
+                    //     )
+                    //   )
+                    //   ,
+                    // ),
                     const SizedBox(height: 25),
                     // phan description
                     Description(description: widget.popularComputerBar.description,)
