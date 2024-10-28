@@ -4,19 +4,23 @@ import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class MenuLoginApp extends StatelessWidget {
   final VoidCallback onLogin; // Callback để xử lý đăng nhập
+  final VoidCallback onSignUp; // Callback để xử lý đăng ký
 
-  const MenuLoginApp({super.key, required this.onLogin});
+  const MenuLoginApp({
+    super.key,
+    required this.onLogin,
+    required this.onSignUp,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.7, // Đặt chiều cao của Container
-        alignment: Alignment.center, // Căn giữa theo chiều dọc
+        height: MediaQuery.of(context).size.height * 0.7,
+        alignment: Alignment.center,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Tiêu đề
             const Text(
               'Log in to continue using the service',
               style: TextStyle(
@@ -25,21 +29,21 @@ class MenuLoginApp extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 20), // Khoảng cách giữa tiêu đề và các nút
+            const SizedBox(height: 20),
             
-            // Nút Đăng Nhập với hiệu ứng
+            // Nút Đăng Nhập
             ZoomTapAnimation(
               child: SizedBox(
-                width: 200, // Chiều rộng cố định cho nút Đăng Nhập
+                width: 200,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Giảm padding chiều ngang
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   ),
                   onPressed: onLogin,
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -47,9 +51,9 @@ class MenuLoginApp extends StatelessWidget {
                             "images/icons/login-3-svgrepo-com.svg",
                             height: 30,
                           ),
-                          const SizedBox(width: 8), // Khoảng cách giữa icon và chữ
+                          const SizedBox(width: 8),
                           const Text(
-                            'Log In', // Đã dịch sang tiếng Anh
+                            'Log In',
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.black,
@@ -57,30 +61,29 @@ class MenuLoginApp extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Icon bên phải
                       SvgPicture.asset(
                         "images/icons/alt-arrow-right-svgrepo-com.svg",
-                        height: 30, // Chiều cao icon bên phải
+                        height: 30,
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 14), // Giảm khoảng cách giữa các nút
+            const SizedBox(height: 14),
             
-            // Nút Đăng Ký với hiệu ứng
+            // Nút Đăng Ký
             ZoomTapAnimation(
               child: SizedBox(
-                width: 200, // Chiều rộng cố định cho nút Đăng Ký
+                width: 200,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 243, 243, 243),
                   ),
-                  onPressed: () {},
+                  onPressed: onSignUp, // Sử dụng callback onSignUp
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
@@ -88,9 +91,9 @@ class MenuLoginApp extends StatelessWidget {
                             "images/icons/login-3-svgrepo-com.svg",
                             height: 30,
                           ),
-                          const SizedBox(width: 8), // Khoảng cách giữa icon và chữ
+                          const SizedBox(width: 8),
                           const Text(
-                            'Sign Up', // Đã dịch sang tiếng Anh
+                            'Sign Up',
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.black,
@@ -98,10 +101,9 @@ class MenuLoginApp extends StatelessWidget {
                           ),
                         ],
                       ),
-                      // Icon bên phải
                       SvgPicture.asset(
                         "images/icons/alt-arrow-right-svgrepo-com.svg",
-                        height: 30, // Chiều cao icon bên phải
+                        height: 30,
                       ),
                     ],
                   ),

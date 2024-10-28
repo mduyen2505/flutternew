@@ -24,19 +24,26 @@ class Computer {
       id: json['_id'], // Lấy trường _id từ JSON
       name: json['name'],
       image: 'images/products/${json['image']}.jpg',
-      price: json['price'].toDouble(),
-      rating: json['rating'].toDouble(),
-      description: json['description'],
+      price: (json['price'] != null)
+          ? json['price'].toDouble()
+          : 0.0, // Kiểm tra null
+      rating: (json['rating'] != null)
+          ? json['rating'].toDouble()
+          : 0.0, // Kiểm tra null
+      description:
+          json['description'] ?? '', // Cung cấp giá trị mặc định nếu null
     );
   }
 }
 
 Future<List<Computer>> loadComputers() async {
-  final response = await http.get(Uri.parse("http://localhost:3001/api/product/getAllProduct"));
+  final response = await http
+      .get(Uri.parse("http://192.168.1.4:3001/api/product/getAllProduct"));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    final List<dynamic> data = jsonResponse['data']; // Lấy dữ liệu từ trường data
+    final List<dynamic> data =
+        jsonResponse['data']; // Lấy dữ liệu từ trường data
     return data.map((json) => Computer.fromJson(json)).toList();
   } else {
     throw Exception('Failed to load computers');

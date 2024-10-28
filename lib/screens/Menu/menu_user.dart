@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/Auth/Register_screen.dart';
+import 'package:flutter_application_1/screens/Auth/login_screen.dart';
 import 'package:flutter_application_1/screens/Menu/Widget/account_app_bar.dart';
 import 'package:flutter_application_1/screens/Menu/Widget/app_setting.dart';
 import 'package:flutter_application_1/screens/Menu/Widget/menu_login_app.dart';
 import 'package:flutter_application_1/screens/Menu/Widget/title_account_app_bar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuUser extends StatefulWidget {
   const MenuUser({super.key});
@@ -13,12 +16,44 @@ class MenuUser extends StatefulWidget {
 }
 
 class _MenuUserState extends State<MenuUser> {
-  bool _isLoggedIn = false; // Biến trạng thái để theo dõi xem người dùng đã đăng nhập hay chưa
+  bool _isLoggedIn = false; // Biến để theo dõi trạng thái đăng nhập
 
-  void _handleLogin() {
+  @override
+  void initState() {
+    super.initState();
+    _loadLoginStatus();
+  }
+
+  void _loadLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isLoggedIn = true; // Thay đổi trạng thái để mô phỏng đăng nhập
+      _isLoggedIn =
+          prefs.getBool('isLoggedIn') ?? false; // Kiểm tra trạng thái đăng nhập
+      print("Login status loaded: $_isLoggedIn"); // Thêm dòng này để kiểm tra
     });
+  }
+
+  void _handleLogin() async {
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+
+    // Kiểm tra kết quả trả về
+    if (result == true) {
+      setState(() {
+        _isLoggedIn = true; // Cập nhật trạng thái khi đăng nhập thành công
+      });
+      _saveLoginStatus(true); // Lưu trạng thái đăng nhập
+    }
+  }
+
+  void _saveLoginStatus(bool status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+        'isLoggedIn', status); // Lưu trạng thái vào SharedPreferences
+    print("Login status saved: $status"); // Thêm dòng này để kiểm tra
   }
 
   @override
@@ -47,8 +82,16 @@ class _MenuUserState extends State<MenuUser> {
                     const SizedBox(height: 15),
                     const AppSetting(),
                   ] else ...[
-                    // Sử dụng MenuLoginApp khi chưa đăng nhập
-                    MenuLoginApp(onLogin: _handleLogin),
+                    MenuLoginApp(
+                      onLogin: _handleLogin,
+                      onSignUp: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SignUpScene(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ],
               ),
