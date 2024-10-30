@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/screens/Auth/logIn_screen.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class AccountPage extends StatelessWidget {
   const AccountPage({super.key});
+
+// Function to handle logout
+  void _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Clear SharedPreferences data first
+    await prefs.clear();
+
+    // Once cleared, navigate to login page
+    if (context.mounted) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +29,8 @@ class AccountPage extends StatelessWidget {
       height: 500, // Thiết lập chiều cao cho Container
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start, // Căn trái cho các phần tử
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Căn trái cho các phần tử
         children: [
           // Tiêu đề Account
           const Text(
@@ -46,7 +65,8 @@ class AccountPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10), // Bo tròn góc
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                  mainAxisAlignment: MainAxisAlignment
+                      .spaceBetween, // Đẩy các phần tử ra hai bên
                   children: [
                     Row(
                       children: [
@@ -60,8 +80,10 @@ class AccountPage extends StatelessWidget {
                         ),
                         const SizedBox(width: 15),
                         const Column(
-                          mainAxisAlignment: MainAxisAlignment.center, // Căn giữa theo chiều dọc
-                          crossAxisAlignment: CrossAxisAlignment.start, // Căn trái chữ
+                          mainAxisAlignment: MainAxisAlignment
+                              .center, // Căn giữa theo chiều dọc
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start, // Căn trái chữ
                           children: [
                             Text(
                               'Nguyen Van A',
@@ -71,7 +93,8 @@ class AccountPage extends StatelessWidget {
                                 color: Colors.white, // Màu chữ trắng để nổi bật
                               ),
                             ),
-                            SizedBox(height: 4), // Khoảng cách giữa tiêu đề và email
+                            SizedBox(
+                                height: 4), // Khoảng cách giữa tiêu đề và email
                             Text(
                               'email@example.com', // Thay thế bằng email thực tế
                               style: TextStyle(
@@ -108,8 +131,10 @@ class AccountPage extends StatelessWidget {
               ),
               onPressed: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   Row(
                     children: [
@@ -149,8 +174,10 @@ class AccountPage extends StatelessWidget {
               ),
               onPressed: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   Row(
                     children: [
@@ -190,8 +217,10 @@ class AccountPage extends StatelessWidget {
               ),
               onPressed: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   Row(
                     children: [
@@ -231,8 +260,10 @@ class AccountPage extends StatelessWidget {
               ),
               onPressed: () {},
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                crossAxisAlignment:
+                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   Row(
                     children: [
@@ -263,17 +294,19 @@ class AccountPage extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Button thứ năm với hiệu ứng
+
+          // Logout button
           ZoomTapAnimation(
             child: TextButton(
               style: TextButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 243, 243, 243),
                 padding: const EdgeInsets.all(12),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
+                minimumSize: const Size(150, 50),
               ),
-              onPressed: () {},
+              onPressed: () => _logout(context), // Call logout function
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
@@ -281,7 +314,7 @@ class AccountPage extends StatelessWidget {
                         "images/icons/logout-3-svgrepo-com.svg",
                         height: 30,
                       ),
-                      const SizedBox(width: 12), // Khoảng cách giữa icon và chữ
+                      const SizedBox(width: 12),
                       const Text(
                         'Logout',
                         style: TextStyle(
@@ -291,10 +324,9 @@ class AccountPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Icon bên phải
                   SvgPicture.asset(
                     "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30, // Chiều cao icon bên phải
+                    height: 30,
                   ),
                 ],
               ),

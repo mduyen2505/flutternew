@@ -38,7 +38,7 @@ class Computer {
 
 Future<List<Computer>> loadComputers() async {
   final response = await http
-      .get(Uri.parse("http://192.168.1.4:3001/api/product/getAllProduct"));
+      .get(Uri.parse("http://10.50.3.161:3001/api/product/getAllProduct"));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> jsonResponse = json.decode(response.body);
