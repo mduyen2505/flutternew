@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
+import 'package:HDTech/constants.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class TrademarkAppBar extends StatefulWidget {
@@ -11,7 +11,7 @@ class TrademarkAppBar extends StatefulWidget {
 
 class TrademarkAppBarState extends State<TrademarkAppBar> {
   String selectedBrand = 'Alienware';
-  
+
   void updateSelectedBrand(String brandName) {
     setState(() {
       selectedBrand = brandName;
@@ -36,9 +36,12 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
                     updateSelectedBrand('Alienware');
                   },
                   child: Container(
-                    padding: const EdgeInsets.only(top: 6, left: 6, right: 16, bottom: 6),
+                    padding: const EdgeInsets.only(
+                        top: 6, left: 6, right: 16, bottom: 6),
                     decoration: ShapeDecoration(
-                      color: selectedBrand == 'Alienware' ? kprimaryColor : Colors.transparent,
+                      color: selectedBrand == 'Alienware'
+                          ? kprimaryColor
+                          : Colors.transparent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(40),
                       ),
@@ -112,7 +115,9 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
                     child: Container(
                       padding: const EdgeInsets.only(left: 6, right: 16),
                       decoration: ShapeDecoration(
-                        color: selectedBrand == brandName ? kprimaryColor : Colors.transparent,
+                        color: selectedBrand == brandName
+                            ? kprimaryColor
+                            : Colors.transparent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(40),
                         ),

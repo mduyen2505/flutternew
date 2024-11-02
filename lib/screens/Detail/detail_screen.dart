@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
-import 'package:flutter_application_1/screens/Detail/Widget/addto_cart.dart';
-import 'package:flutter_application_1/screens/Detail/Widget/description.dart';
-import 'package:flutter_application_1/screens/Detail/Widget/detail_app_bar.dart';
-import 'package:flutter_application_1/screens/Detail/Widget/image_slider.dart';
-import 'package:flutter_application_1/screens/Detail/Widget/items_details.dart';
-import 'package:flutter_application_1/models/computer_model.dart';
+import 'package:HDTech/constants.dart';
+import 'package:HDTech/screens/Detail/Widget/addto_cart.dart';
+import 'package:HDTech/screens/Detail/Widget/description.dart';
+import 'package:HDTech/screens/Detail/Widget/detail_app_bar.dart';
+import 'package:HDTech/screens/Detail/Widget/image_slider.dart';
+import 'package:HDTech/screens/Detail/Widget/items_details.dart';
+import 'package:HDTech/models/computer_model.dart';
 
 class DetailScreen extends StatefulWidget {
   final Computer popularComputerBar;
@@ -17,16 +17,16 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   int currentImage = 0;
-  int currentColor =1;
+  int currentColor = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kcontentColor,
-      // nút thêm vào giỏ hàng 
-      floatingActionButton: AddToCart(popularComputerBar: widget.popularComputerBar),
+      // nút thêm vào giỏ hàng
+      floatingActionButton:
+          AddToCart(popularComputerBar: widget.popularComputerBar),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
 
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,7 +36,7 @@ class _DetailScreenState extends State<DetailScreen> {
               // nut tro ve va yeu thich
               const DetailAppBar(),
               MyImageSlider(
-                image:  widget.popularComputerBar.image,
+                image: widget.popularComputerBar.image,
                 onChange: (index) {
                   setState(() {
                     currentImage = index;
@@ -55,7 +55,9 @@ class _DetailScreenState extends State<DetailScreen> {
                     margin: const EdgeInsets.only(right: 3),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: currentImage == index ? Colors.black : Colors.transparent,
+                      color: currentImage == index
+                          ? Colors.black
+                          : Colors.transparent,
                       border: Border.all(
                         color: Colors.black, // Đảm bảo border có màu
                       ),
@@ -84,8 +86,8 @@ class _DetailScreenState extends State<DetailScreen> {
                   children: [
                     ItemsDetails(popularComputerBar: widget.popularComputerBar),
 
-                    // phan color 
-                    
+                    // phan color
+
                     // const SizedBox(height: 20),
                     // const Text(
                     //   "Color",
@@ -105,16 +107,16 @@ class _DetailScreenState extends State<DetailScreen> {
                     //         duration: const Duration(milliseconds:300
                     //        ),
                     //        width: 40,
-                    //        height: 40, 
+                    //        height: 40,
                     //        decoration: BoxDecoration(
                     //         shape: BoxShape.circle,
                     //         color: currentColor == index
                     //               ? Colors.white
-                    //               : widget.popularComputerBar.colors[index],                         
+                    //               : widget.popularComputerBar.colors[index],
                     //         border:currentColor ==index ?
                     //          Border.all(
                     //           color: widget.popularComputerBar.colors[index],
-                    //           ) 
+                    //           )
                     //           : null,
                     //           ),
                     //           padding: currentColor == index
@@ -136,7 +138,9 @@ class _DetailScreenState extends State<DetailScreen> {
                     // ),
                     const SizedBox(height: 25),
                     // phan description
-                    Description(description: widget.popularComputerBar.description,)
+                    Description(
+                      description: widget.popularComputerBar.description,
+                    )
                   ],
                 ),
               )

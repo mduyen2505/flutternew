@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/Auth/logIn_screen.dart';
+import 'package:HDTech/screens/Auth/logIn_screen.dart';
 
 import 'widgets/body_1.dart';
 import 'widgets/body_2.dart';
@@ -38,19 +38,19 @@ class OnboardingState extends State<Onboarding> {
   }
 
   void _nextPage() {
-  if (_currentPage < 2) {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  } else {
-    // Chuyển đến trang Login khi ở trang cuối cùng
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
-    );
+    if (_currentPage < 2) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      // Chuyển đến trang Login khi ở trang cuối cùng
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {

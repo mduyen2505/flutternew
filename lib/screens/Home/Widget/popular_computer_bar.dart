@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
-import 'package:flutter_application_1/models/computer_model.dart';
-import 'package:flutter_application_1/screens/Detail/detail_screen.dart';
+import 'package:HDTech/constants.dart';
+import 'package:HDTech/models/computer_model.dart';
+import 'package:HDTech/screens/Detail/detail_screen.dart';
 
 class PopularComputerBar extends StatefulWidget {
   const PopularComputerBar({super.key});
@@ -95,14 +95,16 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(12),
                               image: DecorationImage(
-                                image: AssetImage(computer.image), // Sử dụng AssetImage
+                                image: AssetImage(
+                                    computer.image), // Sử dụng AssetImage
                                 fit: BoxFit.cover,
                               ),
                             ),
                           ),
                           const SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               computer.name,
                               style: const TextStyle(
@@ -115,7 +117,8 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
                           ),
                           const SizedBox(height: 4),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(
                               '\$ ${computer.price}',
                               style: const TextStyle(

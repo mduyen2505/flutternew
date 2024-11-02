@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/Home/Widget/home_app_bar.dart';
-import 'package:flutter_application_1/screens/Home/Widget/popular_computer_bar.dart';
-import 'package:flutter_application_1/screens/Home/Widget/search_app_bar.dart';
-import 'package:flutter_application_1/screens/Home/Widget/trademark_app_bar.dart';
+import 'package:HDTech/screens/Home/Widget/home_app_bar.dart';
+import 'package:HDTech/screens/Home/Widget/popular_computer_bar.dart';
+import 'package:HDTech/screens/Home/Widget/search_app_bar.dart';
+import 'package:HDTech/screens/Home/Widget/trademark_app_bar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class HomeScreen extends StatefulWidget {

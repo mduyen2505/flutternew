@@ -1,5 +1,5 @@
+import 'package:HDTech/screens/Auth/logIn_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/Auth/logIn_screen.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';

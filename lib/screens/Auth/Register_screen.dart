@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/api_service.dart'; // Import ApiService
-import 'package:flutter_application_1/screens/Auth/Login_screen.dart';
-import 'package:flutter_application_1/screens/nav_bar_screen.dart';
+import 'package:HDTech/models/api_service.dart'; // Import ApiService
+import 'package:HDTech/screens/Auth/Login_screen.dart';
+import 'package:HDTech/screens/nav_bar_screen.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SignUpScene extends StatefulWidget {

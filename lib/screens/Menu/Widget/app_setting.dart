@@ -1,5 +1,5 @@
+import 'package:HDTech/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
 
 class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
@@ -14,7 +14,6 @@ class _AppSettingState extends State<AppSetting> {
   bool _eneblefaceidforlogin = false;
   bool _enblepushnotifications = false;
   bool _enblelocationservices = false;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +21,8 @@ class _AppSettingState extends State<AppSetting> {
       height: 350, // Thiết lập chiều cao cho Container
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start, // Căn trái cho các phần tử
+        crossAxisAlignment:
+            CrossAxisAlignment.start, // Căn trái cho các phần tử
         children: [
           // Tiêu đề App Settings
           const Text(
@@ -34,12 +34,13 @@ class _AppSettingState extends State<AppSetting> {
             ),
           ),
           const SizedBox(height: 20), // Khoảng cách giữa tiêu đề và switch
-          
+
           // Switch đầu tiên
           Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   const Text(
                     'Eneble Face ID For Log In',
@@ -62,14 +63,15 @@ class _AppSettingState extends State<AppSetting> {
               const Divider(), // Đường line dưới Row
             ],
           ),
-          
+
           const SizedBox(height: 12), // Tạo khoảng cách giữa các switch
-          
+
           // Switch thứ hai
           Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   const Text(
                     'Eneble Push Notifications',
@@ -99,7 +101,8 @@ class _AppSettingState extends State<AppSetting> {
           Column(
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Đẩy các phần tử ra hai bên
+                mainAxisAlignment: MainAxisAlignment
+                    .spaceBetween, // Đẩy các phần tử ra hai bên
                 children: [
                   const Text(
                     'Eneble Location Services',
@@ -124,7 +127,6 @@ class _AppSettingState extends State<AppSetting> {
           ),
 
           const SizedBox(height: 12),
-
         ],
       ),
     );

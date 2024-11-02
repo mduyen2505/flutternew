@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/services.dart'; // Giữ lại dòng này.
+
 import 'package:http/http.dart' as http; // Thêm dòng này.
 
 class Computer {
@@ -24,8 +24,8 @@ class Computer {
       id: json['_id'], // Lấy trường _id từ JSON
       name: json['name'],
       image: 'images/products/${json['image']}.jpg',
-      price: (json['price'] != null)
-          ? json['price'].toDouble()
+      price: (json['prices'] != null)
+          ? json['prices'].toDouble()
           : 0.0, // Kiểm tra null
       rating: (json['rating'] != null)
           ? json['rating'].toDouble()
@@ -38,7 +38,7 @@ class Computer {
 
 Future<List<Computer>> loadComputers() async {
   final response = await http
-      .get(Uri.parse("http://10.50.3.161:3001/api/product/getAllProduct"));
+      .get(Uri.parse("http://192.168.1.4:3001/api/product/getAllProduct"));
 
   if (response.statusCode == 200) {
     final Map<String, dynamic> jsonResponse = json.decode(response.body);

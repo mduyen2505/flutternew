@@ -1,10 +1,10 @@
+import 'package:HDTech/constants.dart';
+import 'package:HDTech/screens/Cart/cart_screen.dart';
+import 'package:HDTech/screens/Home/home_screen.dart';
+import 'package:HDTech/screens/Menu/menu_user.dart';
+import 'package:HDTech/screens/favorite_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/constants.dart';
-import 'package:flutter_application_1/screens/Cart/cart_screen.dart';
-import 'package:flutter_application_1/screens/Home/home_screen.dart';
-import 'package:flutter_application_1/screens/Menu/menu_user.dart';
-import 'package:flutter_application_1/screens/favorite_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BottomNavBar extends StatefulWidget {

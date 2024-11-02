@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/Auth/Register_screen.dart';
+import 'package:HDTech/screens/Auth/Register_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_application_1/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
-import 'package:flutter_application_1/models/api_service.dart';
+import 'package:HDTech/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
+import 'package:HDTech/models/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import ApiService
 
 class LoginScreen extends StatefulWidget {

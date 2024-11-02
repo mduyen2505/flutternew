@@ -1,10 +1,10 @@
+import 'package:HDTech/screens/Auth/Register_screen.dart';
+import 'package:HDTech/screens/Auth/login_screen.dart';
+import 'package:HDTech/screens/Menu/Widget/account_app_bar.dart';
+import 'package:HDTech/screens/Menu/Widget/app_setting.dart';
+import 'package:HDTech/screens/Menu/Widget/menu_login_app.dart';
+import 'package:HDTech/screens/Menu/Widget/title_account_app_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/screens/Auth/Register_screen.dart';
-import 'package:flutter_application_1/screens/Auth/login_screen.dart';
-import 'package:flutter_application_1/screens/Menu/Widget/account_app_bar.dart';
-import 'package:flutter_application_1/screens/Menu/Widget/app_setting.dart';
-import 'package:flutter_application_1/screens/Menu/Widget/menu_login_app.dart';
-import 'package:flutter_application_1/screens/Menu/Widget/title_account_app_bar.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
