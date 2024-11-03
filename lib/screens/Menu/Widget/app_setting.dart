@@ -92,7 +92,7 @@ class _AppSettingState extends State<AppSetting> {
 
           // Switch Face ID
           _buildSwitchRow(
-            title: 'Enable Face ID or Fingerprint For Log In',
+            title: 'Face ID or Fingerprint for Log In',
             value: _enableFaceIDForLogin,
             onChanged: (value) {
               setState(() {

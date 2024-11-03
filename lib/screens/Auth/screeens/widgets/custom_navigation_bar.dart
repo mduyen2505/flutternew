@@ -16,7 +16,7 @@ class CustomNavigationBar extends StatelessWidget {
       color: Colors.transparent, // Không có nền
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: List.generate(4, (index) {
+        children: List.generate(3, (index) {
           return GestureDetector(
             onTap: () {
               onTap(index);
