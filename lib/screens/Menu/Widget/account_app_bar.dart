@@ -156,7 +156,7 @@ class _AccountPageState extends State<AccountPage> {
 
           // Button for Notification Settings
           _buildAccountButton('Notification Setting',
-              "images/icons/bell-svgrepo-com.svg", () {}),
+              "images/icons/bell-bing-svgrepo-com.svg", () {}),
           const SizedBox(height: 16),
 
           // Button for Shipping Address
