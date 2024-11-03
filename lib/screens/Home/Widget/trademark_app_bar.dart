@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:HDTech/constants.dart';
+import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class TrademarkAppBar extends StatefulWidget {
@@ -10,7 +10,7 @@ class TrademarkAppBar extends StatefulWidget {
 }
 
 class TrademarkAppBarState extends State<TrademarkAppBar> {
-  String selectedBrand = 'Alienware';
+  String selectedBrand = 'All';
 
   void updateSelectedBrand(String brandName) {
     setState(() {
@@ -33,13 +33,13 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
               ZoomTapAnimation(
                 child: GestureDetector(
                   onTap: () {
-                    updateSelectedBrand('Alienware');
+                    updateSelectedBrand('All');
                   },
                   child: Container(
                     padding: const EdgeInsets.only(
                         top: 6, left: 6, right: 16, bottom: 6),
                     decoration: ShapeDecoration(
-                      color: selectedBrand == 'Alienware'
+                      color: selectedBrand == 'All'
                           ? kprimaryColor
                           : Colors.transparent,
                       shape: RoundedRectangleBorder(
@@ -69,9 +69,9 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        if (selectedBrand == 'Alienware')
+                        if (selectedBrand == 'All')
                           const Text(
-                            'Alienware',
+                            'All',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 14,

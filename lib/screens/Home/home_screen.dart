@@ -1,6 +1,5 @@
 import 'package:HDTech/screens/Home/Widget/home_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/popular_computer_bar.dart';
-import 'package:HDTech/screens/Home/Widget/search_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/trademark_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -13,14 +12,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Biến trạng thái để quản lý việc làm mới
+  bool _isRefreshing = false;
+
   // Hàm để làm mới dữ liệu
   Future<void> _refreshData() async {
-    // Thực hiện các thao tác làm mới dữ liệu ở đây
     setState(() {
-      // Cập nhật trạng thái giao diện
+      _isRefreshing = true; // Bắt đầu làm mới
     });
     // Giả lập một khoảng thời gian tải dữ liệu
     await Future.delayed(const Duration(seconds: 2));
+    
+    // Sau khi dữ liệu đã được làm mới, cập nhật lại trạng thái
+    setState(() {
+      _isRefreshing = false; // Kết thúc làm mới
+    });
   }
 
   @override
@@ -43,14 +49,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: widget,
                     ),
                   ),
-                  children: const [
-                    SizedBox(height: 25),
-                    CustomAppBar(),
-                    SizedBox(height: 20),
-                    MySearchBar(),
-                    SizedBox(height: 20),
-                    TrademarkAppBar(),
-                    PopularComputerBar(),
+                  children: [
+                    const SizedBox(height: 25),
+                    const CustomAppBar(),
+                    const SizedBox(height: 20),
+                    const TrademarkAppBar(),
+                    PopularComputerBar(
+                      isRefreshing: _isRefreshing, // Truyền trạng thái làm mới
+                    ),
                   ],
                 ),
               ),

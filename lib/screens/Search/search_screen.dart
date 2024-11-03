@@ -1,18 +1,100 @@
+import 'package:HDTech/models/computer_model.dart'; // Import model Computer để có dữ liệu
+import 'package:HDTech/screens/Search/popular_computer_bar.dart'; // Giữ lại import này
 import 'package:flutter/material.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  _SearchScreenState createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  final TextEditingController _searchController = TextEditingController();
+  late Future<List<Computer>> futureComputers;
+
+  @override
+  void initState() {
+    super.initState();
+    futureComputers = loadComputers(); // Gọi hàm để lấy danh sách máy tính
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Colors.black,
-          child: const Placeholder(
-              // color: Colors.white,
-
+      backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+        elevation: 0,
+        title: const Text(
+          "",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16.0,
+          ),
+        ),
+        centerTitle: true,
+        toolbarHeight: 0,
+      ),
+      body: SingleChildScrollView( // Wrap the Column in SingleChildScrollView
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20.0,
+                  vertical: 10.0), // Set horizontal padding for TextField
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search...",
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.tune), // Icon for filter
+                    onPressed: () {
+                      // Add your filter action here
+                      print("Filter icon pressed");
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(50.0),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    // Cập nhật trạng thái khi có sự thay đổi trong ô tìm kiếm
+                  });
+                },
               ),
+            ),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal:
+                      20.0), // Add horizontal padding for PopularComputerBar
+              child: FutureBuilder<List<Computer>>(
+                future: futureComputers,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No computers found.'));
+                  }
+
+                  return PopularComputerBar(
+                    searchQuery: _searchController.text, // Pass search query here
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
