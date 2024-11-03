@@ -21,7 +21,7 @@ class _MenuUserState extends State<MenuUser> {
   @override
   void initState() {
     super.initState();
-    _loadLoginStatus();
+    _loadLoginStatus(); // Đảm bảo trạng thái đăng nhập được tải khi khởi tạo
   }
 
   void _loadLoginStatus() async {
@@ -55,6 +55,7 @@ class _MenuUserState extends State<MenuUser> {
         'isLoggedIn', status); // Lưu trạng thái vào SharedPreferences
     print("Login status saved: $status"); // Thêm dòng này để kiểm tra
   }
+
 
   @override
   Widget build(BuildContext context) {

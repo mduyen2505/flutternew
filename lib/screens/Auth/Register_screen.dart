@@ -285,35 +285,36 @@ class _SignUpSceneState extends State<SignUpScene> {
               ),
             ),
           ),
-          // Nút "Next" nằm ở góc phải trên màn hình
+          // Thanh ngang ở góc phải trên màn hình
           Positioned(
-            top: 40,
-            right: 20,
-            child: GestureDetector(
-              onTap: _navigateToNextPage,
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
+            top: 25,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
                   color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    'images/icons/alt-arrow-right-svgrepo-com.svg',
-                    width: 30,
-                    height: 30,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          'images/icons/alt-arrow-left-svgrepo-com.svg',
+                          width: 30,
+                          height: 30,
+                        ),
+                        onPressed: _navigateToNextPage,
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                // Đường line xám nhạt ở dưới
+                Container(
+                  height: 2, // Chiều cao của đường line
+                  color: Colors.grey[300], // Màu sắc của đường line
+                ),
+              ],
             ),
           ),
           // Văn bản "Already have an account? Sign in"

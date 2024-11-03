@@ -1,9 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:HDTech/screens/Auth/Register_screen.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:HDTech/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
 import 'package:HDTech/models/api_service.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Import ApiService
+import 'package:HDTech/screens/Auth/Register_screen.dart';
+import 'package:HDTech/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,48 +17,110 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final ApiService _apiService = ApiService(); // Khởi tạo ApiService
+  final ApiService _apiService = ApiService();
+  final LocalAuthentication _localAuth = LocalAuthentication();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedCredentials();
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    // No longer loading saved credentials into the text fields
+    final email = await _secureStorage.read(key: 'email');
+    final password = await _secureStorage.read(key: 'password');
+
+    print('Loaded Email: $email, Password: $password');
+
+    // If you want to keep the print statements, you can leave them as is
+    // But do not set the text in the controllers
+  }
+
+  Future<void> _authenticateWithFingerprint() async {
+    bool authenticated = await _localAuth.authenticate(
+      localizedReason: 'Xác thực để đăng nhập',
+      options: const AuthenticationOptions(biometricOnly: true),
+    );
+
+    if (authenticated) {
+      final email = await _secureStorage.read(key: 'email');
+      final password = await _secureStorage.read(key: 'password');
+
+      if (email != null && password != null) {
+        _signIn(email, password); // Gọi hàm đăng nhập
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              content: Text('Không tìm thấy thông tin đăng nhập đã lưu.')),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Xác thực thất bại.')),
+        );
+      }
+    }
+  }
 
   void _navigateToNextPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => const BottomNavBar()), // Gọi BottomNavBar
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const BottomNavBar()),
     );
   }
 
   void _navigateToSignUp() {
     Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: (context) => const SignUpScene()), // Gọi SignUpScene
+      MaterialPageRoute(builder: (context) => const SignUpScene()),
     );
   }
 
-  void _signIn() async {
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  void _signIn(String email, String password) async {
+    try {
+      Map<String, dynamic>? result = await _apiService.signIn(email, password);
 
-    // Gọi hàm đăng nhập
-    bool success = await _apiService.signIn(email, password);
+      if (!mounted) return;
 
-    // Kiểm tra xem widget có còn được gắn hay không
-    if (!mounted) return;
+      if (result != null &&
+          result['status'] == "Oke" &&
+          result['dataUser'] != null) {
+        String accessToken = result['access_token'];
+        String userId = result['dataUser']['id'];
 
-    if (success) {
-      // Lưu trạng thái đăng nhập
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true); // Lưu trạng thái đăng nhập
+        // Lưu thông tin vào SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('access_token', accessToken);
+        await prefs.setString('id', userId);
+        await prefs.setBool('isLoggedIn', true);
 
-      // Điều hướng đến BottomNavBar sau khi đăng nhập thành công
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const BottomNavBar()),
-      );
-    } else {
-      // Thông báo lỗi nếu đăng nhập thất bại
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'),
-        ),
-      );
+        // Lưu email và password vào Flutter Secure Storage
+        await _secureStorage.write(key: 'email', value: email);
+        await _secureStorage.write(key: 'password', value: password);
+
+        // Lưu email và password vào SharedPreferences
+        await prefs.setString('email', email);
+        await prefs.setString('password', password);
+
+        _navigateToNextPage();
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(result?['error'] ??
+                  'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Đã xảy ra lỗi.')),
+        );
+      }
+      print('Caught error: $e');
     }
   }
 
@@ -73,7 +137,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // Nền màu đỏ và bo tròn cho logo
                   Container(
                     decoration: const BoxDecoration(
                       color: Color(0xFFD70014),
@@ -89,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // TextField cho Email
                   SizedBox(
                     width: double.infinity,
                     child: TextField(
@@ -107,7 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // TextField cho Password
                   SizedBox(
                     width: double.infinity,
                     child: TextField(
@@ -126,11 +187,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  // Nút "Sign In"
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: _signIn, // Gọi hàm đăng nhập
+                      onPressed: () {
+                        _signIn(
+                            _emailController.text, _passwordController.text);
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -141,9 +204,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Text(
                         'Sign In',
                         style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: _authenticateWithFingerprint,
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: Colors.red, width: 2),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      child: const Text(
+                        'Login with Fingerprint or FaceID',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
                       ),
                     ),
                   ),
@@ -151,38 +237,36 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          // Nút "Next" nằm ở góc phải trên màn hình
           Positioned(
-            top: 40,
-            right: 20,
-            child: GestureDetector(
-              onTap: _navigateToNextPage,
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
+            top: 25,
+            left: 0,
+            right: 0,
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
                   color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 3,
-                      blurRadius: 5,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Center(
-                  child: SvgPicture.asset(
-                    'images/icons/alt-arrow-right-svgrepo-com.svg',
-                    width: 30,
-                    height: 30,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        icon: SvgPicture.asset(
+                          'images/icons/alt-arrow-left-svgrepo-com.svg',
+                          width: 30,
+                          height: 30,
+                        ),
+                        onPressed: _navigateToNextPage,
+                      ),
+                    ],
                   ),
                 ),
-              ),
+                Container(
+                  height: 2,
+                  color: Colors.grey[300],
+                ),
+              ],
             ),
           ),
-          // Văn bản "Don’t have an account? Sign Up for free" nằm ở dưới cùng
           Positioned(
             bottom: 20,
             left: 0,

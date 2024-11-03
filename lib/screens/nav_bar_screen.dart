@@ -2,7 +2,7 @@ import 'package:HDTech/constants.dart';
 import 'package:HDTech/screens/Cart/cart_screen.dart';
 import 'package:HDTech/screens/Home/home_screen.dart';
 import 'package:HDTech/screens/Menu/menu_user.dart';
-import 'package:HDTech/screens/favorite_screen.dart';
+import 'package:HDTech/screens/Search/search_screen.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -19,7 +19,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   List screens = const [
     HomeScreen(),
-    FavoriteScreen(),
+    SearchScreen(),
     CartScreen(),
     Scaffold(),
     MenuUser(),
@@ -97,7 +97,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                 });
               },
               icon: SvgPicture.asset(
-                'images/icons/heart-angle-svgrepo-com.svg',
+                'images/icons/magnifer-svgrepo-com.svg',
                 width: 30,
                 height: 30,
                 colorFilter: ColorFilter.mode(

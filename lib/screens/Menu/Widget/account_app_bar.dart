@@ -1,117 +1,150 @@
-import 'package:HDTech/screens/Auth/logIn_screen.dart';
+import 'package:HDTech/models/account_service.dart';
+import 'package:HDTech/screens/nav_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
-// Function to handle logout
-  void _logout(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
 
-    // Clear SharedPreferences data first
-    await prefs.clear();
+class _AccountPageState extends State<AccountPage> {
+  Map<String, dynamic>? _userDetails;
 
-    // Once cleared, navigate to login page
-    if (context.mounted) {
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (route) => false,
-      );
-    }
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData(); // Load user data when the widget is initialized
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', false); // Update login status
+    await prefs.remove('email'); // Remove saved email
+    await prefs.remove('password'); // Remove saved password
+
+    // Navigate to the login screen
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (context) => const BottomNavBar()),
+    );
+  }
+
+  Future<void> _loadUserData() async {
+    AccountService accountService = AccountService();
+    _userDetails = await accountService.getUserDetails();
+    setState(() {}); // Refresh the UI
+  }
+
+  Widget _buildAccountButton(
+      String title, String iconPath, VoidCallback onPressed) {
+    return ZoomTapAnimation(
+      child: TextButton(
+        style: TextButton.styleFrom(
+          backgroundColor: const Color.fromARGB(255, 243, 243, 243),
+          padding: const EdgeInsets.all(12),
+          minimumSize: const Size(150, 50), // Minimum size
+        ),
+        onPressed: onPressed,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(iconPath, height: 30),
+                const SizedBox(width: 12), // Space between icon and text
+                Text(
+                  title,
+                  style: const TextStyle(fontSize: 17, color: Colors.black),
+                ),
+              ],
+            ),
+            SvgPicture.asset(
+              "images/icons/alt-arrow-right-svgrepo-com.svg",
+              height: 30, // Icon on the right
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 500, // Thiết lập chiều cao cho Container
+      height: 500,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment:
-            CrossAxisAlignment.start, // Căn trái cho các phần tử
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tiêu đề Account
           const Text(
             'Account',
             style: TextStyle(
-              fontSize: 20, // Kích thước chữ lớn hơn cho tiêu đề
-              fontWeight: FontWeight.bold, // Đậm
-              color: Colors.black,
-            ),
+                fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
           ),
-          const SizedBox(height: 20), // Khoảng cách giữa tiêu đề và button
+          const SizedBox(height: 20),
 
-          // Thông tin tài khoản
+          // Account information button
           ZoomTapAnimation(
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.all(0),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
+                minimumSize: const Size(150, 50),
               ),
-              onPressed: () {},
+              onPressed: () {}, // Add functionality later
               child: Container(
-                padding: const EdgeInsets.all(12), // Thêm padding cho Container
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.red[600]!, // Màu đỏ đậm
-                      Colors.red[200]!, // Màu đỏ nhạt
-                    ],
+                    colors: [Colors.red[600]!, Colors.red[200]!],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(10), // Bo tròn góc
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, // Đẩy các phần tử ra hai bên
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Row(
                       children: [
                         ClipOval(
                           child: Image.asset(
                             "images/dell-alienware-x16-2024.jpg",
-                            height: 60, // Tăng chiều cao ảnh
-                            width: 60, // Đảm bảo chiều rộng bằng chiều cao
-                            fit: BoxFit.cover, // Đảm bảo ảnh không bị méo
+                            height: 60,
+                            width: 60,
+                            fit: BoxFit.cover,
                           ),
                         ),
                         const SizedBox(width: 15),
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment
-                              .center, // Căn giữa theo chiều dọc
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start, // Căn trái chữ
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Nguyen Van A',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold, // Làm đậm chữ
-                                color: Colors.white, // Màu chữ trắng để nổi bật
-                              ),
+                              _userDetails?['name'] ?? 'Unknown',
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
                             ),
-                            SizedBox(
-                                height: 4), // Khoảng cách giữa tiêu đề và email
+                            const SizedBox(height: 4),
                             Text(
-                              'email@example.com', // Thay thế bằng email thực tế
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white70, // Màu chữ email
-                              ),
+                              _userDetails?['email'] ?? 'unknown@unknown.com',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white70),
                             ),
                           ],
                         ),
                       ],
                     ),
-                    // Icon bên phải
                     SvgPicture.asset(
                       "images/icons/ruler-cross-pen-svgrepo-com.svg",
-                      height: 25, // Chiều cao icon bên phải
-                      // ignore: deprecated_member_use
-                      color: Colors.white, // Màu icon trắng
+                      height: 25,
+                      color: Colors.white,
                     ),
                   ],
                 ),
@@ -119,181 +152,27 @@ class AccountPage extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(height: 16), // Tạo khoảng cách giữa hai button
-
-          // Button đầu tiên với hiệu ứng
-          ZoomTapAnimation(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-                padding: const EdgeInsets.all(12),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
-              ),
-              onPressed: () {},
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Đẩy các phần tử ra hai bên
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        "images/icons/bell-svgrepo-com.svg",
-                        height: 25,
-                      ),
-                      const SizedBox(width: 12), // Khoảng cách giữa icon và chữ
-                      const Text(
-                        'Notification Setting',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon bên phải
-                  SvgPicture.asset(
-                    "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30, // Chiều cao icon bên phải
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 16), // Tạo khoảng cách giữa hai button
-
-          // Button thứ hai với hiệu ứng
-          ZoomTapAnimation(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-                padding: const EdgeInsets.all(12),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
-              ),
-              onPressed: () {},
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Đẩy các phần tử ra hai bên
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        "images/icons/cart-2-svgrepo-com.svg",
-                        height: 30,
-                      ),
-                      const SizedBox(width: 12), // Khoảng cách giữa icon và chữ
-                      const Text(
-                        'Shipping Address',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon bên phải
-                  SvgPicture.asset(
-                    "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30, // Chiều cao icon bên phải
-                  ),
-                ],
-              ),
-            ),
-          ),
-
           const SizedBox(height: 16),
 
-          // Button thứ ba với hiệu ứng
-          ZoomTapAnimation(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-                padding: const EdgeInsets.all(12),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
-              ),
-              onPressed: () {},
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Đẩy các phần tử ra hai bên
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        "images/icons/wallet-svgrepo-com.svg",
-                        height: 30,
-                      ),
-                      const SizedBox(width: 12), // Khoảng cách giữa icon và chữ
-                      const Text(
-                        'Payment Info',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon bên phải
-                  SvgPicture.asset(
-                    "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30, // Chiều cao icon bên phải
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+          // Button for Notification Settings
+          _buildAccountButton('Notification Setting',
+              "images/icons/bell-svgrepo-com.svg", () {}),
           const SizedBox(height: 16),
 
-          // Button thứ tư với hiệu ứng
-          ZoomTapAnimation(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 243, 243, 243),
-                padding: const EdgeInsets.all(12),
-                minimumSize: const Size(150, 50), // Kích thước tối thiểu
-              ),
-              onPressed: () {},
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.center, // Căn giữa theo chiều dọc
-                mainAxisAlignment: MainAxisAlignment
-                    .spaceBetween, // Đẩy các phần tử ra hai bên
-                children: [
-                  Row(
-                    children: [
-                      SvgPicture.asset(
-                        "images/icons/trash-bin-trash-svgrepo-com.svg",
-                        height: 30,
-                      ),
-                      const SizedBox(width: 12), // Khoảng cách giữa icon và chữ
-                      const Text(
-                        'Delete Account',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Icon bên phải
-                  SvgPicture.asset(
-                    "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30, // Chiều cao icon bên phải
-                  ),
-                ],
-              ),
-            ),
-          ),
-
+          // Button for Shipping Address
+          _buildAccountButton(
+              'Shipping Address', "images/icons/cart-2-svgrepo-com.svg", () {}),
           const SizedBox(height: 16),
 
-          // Button thứ năm với hiệu ứng
+          // Button for Payment Info
+          _buildAccountButton(
+              'Payment Info', "images/icons/wallet-svgrepo-com.svg", () {}),
+          const SizedBox(height: 16),
+
+          // Button for Delete Account
+          _buildAccountButton('Delete Account',
+              "images/icons/trash-bin-trash-svgrepo-com.svg", () {}),
+          const SizedBox(height: 16),
 
           // Logout button
           ZoomTapAnimation(
@@ -303,31 +182,25 @@ class AccountPage extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 minimumSize: const Size(150, 50),
               ),
-              onPressed: () => _logout(context), // Call logout function
+              onPressed: () => _logout(context),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      SvgPicture.asset(
-                        "images/icons/logout-3-svgrepo-com.svg",
-                        height: 30,
-                      ),
+                      SvgPicture.asset("images/icons/logout-3-svgrepo-com.svg",
+                          height: 30),
                       const SizedBox(width: 12),
                       const Text(
                         'Logout',
-                        style: TextStyle(
-                          fontSize: 17,
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(fontSize: 17, color: Colors.black),
                       ),
                     ],
                   ),
                   SvgPicture.asset(
-                    "images/icons/alt-arrow-right-svgrepo-com.svg",
-                    height: 30,
-                  ),
+                      "images/icons/alt-arrow-right-svgrepo-com.svg",
+                      height: 30),
                 ],
               ),
             ),
