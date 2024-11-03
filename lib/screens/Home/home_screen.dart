@@ -1,3 +1,4 @@
+import 'package:HDTech/screens/Home/Widget/banner_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/home_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/popular_computer_bar.dart';
 import 'package:HDTech/screens/Home/Widget/trademark_app_bar.dart';
@@ -12,20 +13,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Biến trạng thái để quản lý việc làm mới
   bool _isRefreshing = false;
 
-  // Hàm để làm mới dữ liệu
   Future<void> _refreshData() async {
     setState(() {
-      _isRefreshing = true; // Bắt đầu làm mới
+      _isRefreshing = true;
     });
-    // Giả lập một khoảng thời gian tải dữ liệu
     await Future.delayed(const Duration(seconds: 2));
-    
-    // Sau khi dữ liệu đã được làm mới, cập nhật lại trạng thái
     setState(() {
-      _isRefreshing = false; // Kết thúc làm mới
+      _isRefreshing = false;
     });
   }
 
@@ -35,33 +31,50 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: const Color.fromARGB(255, 241, 241, 241),
       body: RefreshIndicator(
         onRefresh: _refreshData,
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: AnimationLimiter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: AnimationConfiguration.toStaggeredList(
-                  duration: const Duration(milliseconds: 500),
-                  childAnimationBuilder: (widget) => SlideAnimation(
-                    verticalOffset: 50.0,
-                    child: FadeInAnimation(
-                      child: widget,
-                    ),
-                  ),
-                  children: [
-                    const SizedBox(height: 25),
-                    const CustomAppBar(),
-                    const SizedBox(height: 20),
-                    const TrademarkAppBar(),
-                    PopularComputerBar(
-                      isRefreshing: _isRefreshing, // Truyền trạng thái làm mới
-                    ),
-                  ],
+        child: CustomScrollView(
+          slivers: [
+            // SliverAppBar for the custom app bar
+            SliverAppBar(
+              backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+              elevation: 0,
+              title: const CustomAppBar(), // Your CustomAppBar widget
+              pinned: true, // Keeps the app bar pinned at the top
+              floating: false, // Don't allow the app bar to float
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.all(20),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) {
+                    return AnimationLimiter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: AnimationConfiguration.toStaggeredList(
+                          duration: const Duration(milliseconds: 500),
+                          childAnimationBuilder: (widget) => SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(
+                              child: widget,
+                            ),
+                          ),
+                          children: [
+                            const BannerAppBar(),
+                            const SizedBox(height: 10),
+                            const TrademarkAppBar(),
+                            PopularComputerBar(
+                              isRefreshing: _isRefreshing,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  childCount:
+                      1, // Since we're using a single child for the list
                 ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

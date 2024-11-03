@@ -62,7 +62,7 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
                             child: Padding(
                               padding: const EdgeInsets.all(7.0),
                               child: Image.asset(
-                                'images/logo-alienware.png',
+                                'images/notes-minimalistic-svgrepo-com.png',
                                 fit: BoxFit.contain,
                               ),
                             ),
