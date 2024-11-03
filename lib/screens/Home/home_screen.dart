@@ -34,10 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
         child: CustomScrollView(
           slivers: [
             // SliverAppBar for the custom app bar
-            SliverAppBar(
-              backgroundColor: const Color.fromARGB(255, 241, 241, 241),
+            const SliverAppBar(
+              backgroundColor: Color.fromARGB(255, 241, 241, 241),
               elevation: 0,
-              title: const CustomAppBar(), // Your CustomAppBar widget
+              title: CustomAppBar(), // Your CustomAppBar widget
               pinned: true, // Keeps the app bar pinned at the top
               floating: false, // Don't allow the app bar to float
             ),
