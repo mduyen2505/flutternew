@@ -61,15 +61,14 @@ class _CustomAppBarState extends State<CustomAppBar> {
         });
       } else {
         setState(() {
-          _currentLocation = 'Không thể lấy được địa chỉ';
+          _currentLocation = 'Unable to get address';
         });
       }
     } catch (e) {
       setState(() {
-        _currentLocation =
-            'Không thể lấy được vị trí: $e'; // Hiển thị lỗi chi tiết
+        _currentLocation = 'Unable to get location'; // Hiển thị lỗi chi tiết
       });
-      print('Error getting location: $e');
+      print('Error getting location');
     }
   }
 
