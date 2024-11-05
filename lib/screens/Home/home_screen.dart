@@ -14,12 +14,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool _isRefreshing = false;
+  final GlobalKey<PopularComputerBarState> popularComputerBarKey =
+      GlobalKey<PopularComputerBarState>();
 
   Future<void> _refreshData() async {
     setState(() {
       _isRefreshing = true;
     });
     await Future.delayed(const Duration(seconds: 2));
+    popularComputerBarKey.currentState
+        ?.reloadComputers(); // Calls reloadComputers using the key
     setState(() {
       _isRefreshing = false;
     });
@@ -33,13 +37,13 @@ class _HomeScreenState extends State<HomeScreen> {
         onRefresh: _refreshData,
         child: CustomScrollView(
           slivers: [
-            // SliverAppBar for the custom app bar
             const SliverAppBar(
               backgroundColor: Color.fromARGB(255, 241, 241, 241),
               elevation: 0,
-              title: CustomAppBar(), // Your CustomAppBar widget
-              pinned: true, // Keeps the app bar pinned at the top
-              floating: false, // Don't allow the app bar to float
+              title: CustomAppBar(),
+              automaticallyImplyLeading: false, // Disable back button
+              pinned: true,
+              floating: false,
             ),
             SliverPadding(
               padding: const EdgeInsets.all(20),
@@ -61,7 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             const BannerAppBar(),
                             const SizedBox(height: 10),
                             const TrademarkAppBar(),
+                            const SizedBox(height: 10),
                             PopularComputerBar(
+                              key: popularComputerBarKey,
                               isRefreshing: _isRefreshing,
                             ),
                           ],
@@ -69,8 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     );
                   },
-                  childCount:
-                      1, // Since we're using a single child for the list
+                  childCount: 1,
                 ),
               ),
             ),

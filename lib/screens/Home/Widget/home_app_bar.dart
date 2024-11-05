@@ -55,9 +55,23 @@ class _CustomAppBarState extends State<CustomAppBar> {
         Placemark place = placemarks[0];
 
         setState(() {
-          // Định dạng địa chỉ: Tên đường, phường, và viết tắt administrativeArea
-          _currentLocation =
-              '${place.thoroughfare?.replaceAll("Đường", "").trim() ?? ''} St., ${place.subAdministrativeArea ?? ''}, ${abbreviate(place.administrativeArea ?? '')}'; // Viết tắt chữ cái đầu
+          // Định dạng địa chỉ: Tên đường và viết tắt administrativeArea
+          String street = place.thoroughfare
+                  ?.replaceAll("Đường", "St.")
+                  .replaceAll("Street", "St.")
+                  .trim() ??
+              '';
+          String administrativeAreaAbbr =
+              abbreviate(place.administrativeArea ?? '');
+
+          // Kiểm tra độ dài của địa chỉ
+          if (street.length + administrativeAreaAbbr.length > 20) {
+            // 20 là độ dài tối đa
+            _currentLocation = '$street, $administrativeAreaAbbr';
+          } else {
+            _currentLocation =
+                '$street, ${place.subAdministrativeArea ?? ''}, $administrativeAreaAbbr';
+          }
         });
       } else {
         setState(() {

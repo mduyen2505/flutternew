@@ -9,18 +9,26 @@ class PopularComputerBar extends StatefulWidget {
   const PopularComputerBar({super.key, this.isRefreshing = false});
 
   @override
-  _PopularComputerBarState createState() => _PopularComputerBarState();
+  PopularComputerBarState createState() => PopularComputerBarState();
 }
 
-class _PopularComputerBarState extends State<PopularComputerBar> {
+class PopularComputerBarState extends State<PopularComputerBar> {
   late Future<List<Computer>> futureComputers;
-  late List<double> scales; // Marked as late
+  late List<double>
+      scales; // For storing the scale of each item for tap animation
 
   @override
   void initState() {
     super.initState();
-    futureComputers = loadComputers();
-    scales = []; // Initialize the list of scales
+    futureComputers = loadComputers(); // Load computers initially
+    scales = []; // Initialize the list of scales for each item
+  }
+
+  // Method to reload data
+  void reloadComputers() {
+    setState(() {
+      futureComputers = loadComputers();
+    });
   }
 
   @override
@@ -38,16 +46,15 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
 
         final computers = snapshot.data!;
 
-        // Initialize scales list with 1.0 for each computer
+        // Initialize scales list with 1.0 for each computer if not done already
         if (scales.length != computers.length) {
           scales = List<double>.filled(computers.length, 1.0);
         }
 
         return Padding(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 0), // Keep other paddings as needed
+          padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Transform.translate(
-            offset: const Offset(0, -25), // Move it up by 10 pixels
+            offset: const Offset(0, -25), // Move up the entire widget
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -66,14 +73,12 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
                     return GestureDetector(
                       onTapDown: (_) {
                         setState(() {
-                          scales[index] =
-                              0.95; // Scale down on tap for the specific item
+                          scales[index] = 0.95; // Scale down on tap
                         });
                       },
                       onTapUp: (_) {
                         setState(() {
-                          scales[index] =
-                              1.0; // Reset scale for the specific item
+                          scales[index] = 1.0; // Reset scale on tap release
                         });
                         Navigator.push(
                           context,
@@ -86,13 +91,11 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
                       },
                       onTapCancel: () {
                         setState(() {
-                          scales[index] =
-                              1.0; // Reset scale if tap is canceled for the specific item
+                          scales[index] = 1.0; // Reset scale if tap is canceled
                         });
                       },
                       child: Transform.scale(
-                        scale: scales[
-                            index], // Use the specific scale for the item
+                        scale: scales[index],
                         child: Stack(
                           children: [
                             Container(
