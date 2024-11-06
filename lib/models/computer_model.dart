@@ -1,44 +1,72 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'config.dart'; // Thêm import này
+import 'config.dart'; // Import Config for base URL
 
 class Computer {
   final String id;
   final String name;
-  final String image;
+  final String imageUrl;
   final double price;
-  final double rating;
   final String description;
+  final String company;
+  final String cpu;
+  final String ram;
+  final String memory;
+  final String gpu;
+  final String weight;
+  final String screenResolution;
+  final String inches;
 
   Computer({
     required this.id,
     required this.name,
-    required this.image,
+    required this.imageUrl,
     required this.price,
-    required this.rating,
     required this.description,
+    required this.company,
+    required this.cpu,
+    required this.ram,
+    required this.memory,
+    required this.gpu,
+    required this.weight,
+    required this.screenResolution,
+    required this.inches,
   });
 
   factory Computer.fromJson(Map<String, dynamic> json) {
     return Computer(
-      id: json['_id'],
-      name: json['name'],
-      image: 'images/products/${json['image']}.jpg',
-      price: (json['prices'] != null) ? json['prices'].toDouble() : 0.0,
-      rating: (json['rating'] != null) ? json['rating'].toDouble() : 0.0,
-      description: json['description'] ?? '',
+      id: json['_id'] as String? ?? '',
+      name: json['name'] as String? ?? 'Unknown Computer',
+      imageUrl: json['imageUrl'] as String? ??
+          'https://via.placeholder.com/150', // Default image if null
+      price: (json['prices'] as num?)?.toDouble() ?? 0.0, // Price conversion
+      description: json['description'] as String? ?? 'No description available',
+      company: json['company'] as String? ?? 'Unknown Company',
+      cpu: json['cpu'] as String? ?? 'Unknown CPU',
+      ram: json['ram'] as String? ?? 'Unknown RAM',
+      memory: json['memory'] as String? ?? 'Unknown Memory',
+      gpu: json['gpu'] as String? ?? 'Unknown GPU',
+      weight: json['weight'] as String? ?? 'Unknown Weight',
+      screenResolution: json['screenResolution'] as String? ?? 'Unknown Resolution',
+      inches: json['inches'] as String? ?? 'Unknown Size',
     );
   }
 }
 
 Future<List<Computer>> loadComputers() async {
-  final response = await http.get(Uri.parse('${Config.baseUrl}/product/getAllProduct')); // Cập nhật URL
+  final response =
+      await http.get(Uri.parse('${Config.baseUrl}/product/getAllProduct'));
 
   if (response.statusCode == 200) {
-    final Map<String, dynamic> jsonResponse = json.decode(response.body);
-    final List<dynamic> data = jsonResponse['data'];
-    return data.map((json) => Computer.fromJson(json)).toList();
+    try {
+      final Map<String, dynamic> jsonResponse = json.decode(response.body);
+      final List<dynamic> data = jsonResponse['data'];
+      return data.map((json) => Computer.fromJson(json)).toList();
+    } catch (e) {
+      throw Exception('Failed to parse computers: $e');
+    }
   } else {
-    throw Exception('Failed to load computers');
+    throw Exception(
+        'Failed to load computers, status code: ${response.statusCode}');
   }
 }

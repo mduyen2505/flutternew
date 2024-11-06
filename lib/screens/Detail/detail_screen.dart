@@ -36,7 +36,7 @@ class _DetailScreenState extends State<DetailScreen> {
               // nut tro ve va yeu thich
               const DetailAppBar(),
               MyImageSlider(
-                image: widget.popularComputerBar.image,
+                image: widget.popularComputerBar.imageUrl,
                 onChange: (index) {
                   setState(() {
                     currentImage = index;

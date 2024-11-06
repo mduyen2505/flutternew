@@ -2,6 +2,7 @@ import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
 import 'package:HDTech/screens/Detail/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PopularComputerBar extends StatefulWidget {
   final bool isRefreshing;
@@ -14,17 +15,15 @@ class PopularComputerBar extends StatefulWidget {
 
 class PopularComputerBarState extends State<PopularComputerBar> {
   late Future<List<Computer>> futureComputers;
-  late List<double>
-      scales; // For storing the scale of each item for tap animation
+  late List<double> scales;
 
   @override
   void initState() {
     super.initState();
-    futureComputers = loadComputers(); // Load computers initially
-    scales = []; // Initialize the list of scales for each item
+    futureComputers = loadComputers();
+    scales = [];
   }
 
-  // Method to reload data
   void reloadComputers() {
     setState(() {
       futureComputers = loadComputers();
@@ -46,7 +45,6 @@ class PopularComputerBarState extends State<PopularComputerBar> {
 
         final computers = snapshot.data!;
 
-        // Initialize scales list with 1.0 for each computer if not done already
         if (scales.length != computers.length) {
           scales = List<double>.filled(computers.length, 1.0);
         }
@@ -54,7 +52,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 0),
           child: Transform.translate(
-            offset: const Offset(0, -25), // Move up the entire widget
+            offset: const Offset(0, -25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -73,12 +71,12 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                     return GestureDetector(
                       onTapDown: (_) {
                         setState(() {
-                          scales[index] = 0.95; // Scale down on tap
+                          scales[index] = 0.95;
                         });
                       },
                       onTapUp: (_) {
                         setState(() {
-                          scales[index] = 1.0; // Reset scale on tap release
+                          scales[index] = 1.0;
                         });
                         Navigator.push(
                           context,
@@ -91,7 +89,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                       },
                       onTapCancel: () {
                         setState(() {
-                          scales[index] = 1.0; // Reset scale if tap is canceled
+                          scales[index] = 1.0;
                         });
                       },
                       child: Transform.scale(
@@ -118,7 +116,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(12),
                                       image: DecorationImage(
-                                        image: AssetImage(computer.image),
+                                        image: NetworkImage(computer.imageUrl),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -130,7 +128,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                     child: Text(
                                       computer.name,
                                       style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 17,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       maxLines: 2,
@@ -142,9 +140,11 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: Text(
-                                      '\$ ${computer.price}',
+                                      NumberFormat.currency(
+                                              locale: 'vi_VN', symbol: 'VNĐ')
+                                          .format(computer.price),
                                       style: const TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 15,
                                         color: kprimaryColor,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -158,7 +158,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                               right: 0,
                               child: GestureDetector(
                                 onTap: () {
-                                  print('Thêm ${computer.name} vào giỏ hàng!');
+                                  debugPrint('Added ${computer.name} to cart!');
                                 },
                                 child: Container(
                                   width: 35,

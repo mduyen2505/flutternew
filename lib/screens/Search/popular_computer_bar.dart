@@ -2,6 +2,7 @@ import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
 import 'package:HDTech/screens/Detail/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PopularComputerBar extends StatefulWidget {
   final String searchQuery;
@@ -9,10 +10,10 @@ class PopularComputerBar extends StatefulWidget {
   const PopularComputerBar({super.key, required this.searchQuery});
 
   @override
-  _PopularComputerBarState createState() => _PopularComputerBarState();
+  PopularComputerBarState createState() => PopularComputerBarState();
 }
 
-class _PopularComputerBarState extends State<PopularComputerBar> {
+class PopularComputerBarState extends State<PopularComputerBar> {
   late Future<List<Computer>> futureComputers;
 
   @override
@@ -22,7 +23,6 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
   }
 
   Future<void> _refreshComputers() async {
-    // Reload the computers list
     setState(() {
       futureComputers = loadComputers();
     });
@@ -62,128 +62,133 @@ class _PopularComputerBarState extends State<PopularComputerBar> {
             itemCount: filteredComputers.length,
             itemBuilder: (context, index) {
               final computer = filteredComputers[index];
-              double scale = 1.0; // Scale for this specific item
-
-              return StatefulBuilder(
-                builder: (context, setState) {
-                  return GestureDetector(
-                    onTapDown: (_) {
-                      setState(() {
-                        scale = 0.95; // Scale down on tap
-                      });
-                    },
-                    onTapUp: (_) {
-                      setState(() {
-                        scale = 1.0; // Scale back up on tap
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetailScreen(
-                            popularComputerBar: computer,
-                          ),
-                        ),
-                      );
-                    },
-                    onTapCancel: () {
-                      setState(() {
-                        scale = 1.0; // Reset scale on cancel
-                      });
-                    },
-                    child: Transform.scale(
-                      scale: scale,
-                      child: Stack(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.1),
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: AssetImage(computer.image),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 6),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(
-                                    computer.name,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: Text(
-                                    '\$ ${computer.price}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      color: kprimaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                print('Thêm ${computer.name} vào giỏ hàng!');
-                              },
-                              child: Container(
-                                width: 35,
-                                height: 35,
-                                decoration: const BoxDecoration(
-                                  color: kprimaryColor,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(12),
-                                    bottomRight: Radius.circular(12),
-                                  ),
-                                ),
-                                child: const Icon(
-                                  Icons.add,
-                                  color: Colors.white,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              return ComputerItem(computer: computer);
             },
           ),
         );
       },
     );
+  }
+}
+
+class ComputerItem extends StatefulWidget {
+  final Computer computer;
+
+  const ComputerItem({super.key, required this.computer});
+
+  @override
+  State<ComputerItem> createState() => _ComputerItemState();
+}
+
+class _ComputerItemState extends State<ComputerItem> {
+  double scale = 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    final formatCurrency =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => scale = 0.95),
+      onTapUp: (_) {
+        setState(() => scale = 1.0);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                DetailScreen(popularComputerBar: widget.computer),
+          ),
+        );
+      },
+      onTapCancel: () => setState(() => scale = 1.0),
+      child: Transform.scale(
+        scale: scale,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    blurRadius: 5,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: NetworkImage(widget.computer.imageUrl),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      widget.computer.name,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      formatCurrency.format(widget.computer.price),
+                      style: const TextStyle(
+                        fontSize: 15,
+                        color: kprimaryColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: GestureDetector(
+                onTap: () => _addToCart(widget.computer.name),
+                child: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: const BoxDecoration(
+                    color: kprimaryColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      bottomRight: Radius.circular(12),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _addToCart(String computerName) {
+    // Replace print with a logging framework if desired
+    debugPrint('Thêm $computerName vào giỏ hàng!');
   }
 }
