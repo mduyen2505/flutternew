@@ -42,60 +42,64 @@ class _SearchScreenState extends State<SearchScreen> {
         centerTitle: true,
         toolbarHeight: 0,
       ),
-      body: SingleChildScrollView( // Wrap the Column in SingleChildScrollView
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20.0,
-                  vertical: 10.0), // Set horizontal padding for TextField
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: "Search...",
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.tune), // Icon for filter
-                    onPressed: () {
-                      // Add your filter action here
-                      print("Filter icon pressed");
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 20.0,
+                vertical: 10.0), // Set horizontal padding for TextField
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: "Search...",
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.tune), // Icon for filter
+                  onPressed: () {
+                    // Add your filter action here
+                    print("Filter icon pressed");
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    // Cập nhật trạng thái khi có sự thay đổi trong ô tìm kiếm
-                  });
-                },
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
               ),
+              onChanged: (value) {
+                setState(() {
+                  // Cập nhật trạng thái khi có sự thay đổi trong ô tìm kiếm
+                });
+              },
             ),
-            const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal:
-                      20.0), // Add horizontal padding for PopularComputerBar
-              child: FutureBuilder<List<Computer>>(
-                future: futureComputers,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text('No computers found.'));
-                  }
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            // Use Expanded here to ensure the list takes up available space
+            child: FutureBuilder<List<Computer>>(
+              future: futureComputers,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No computers found.'));
+                }
 
-                  return PopularComputerBar(
-                    searchQuery: _searchController.text, // Pass search query here
-                  );
-                },
-              ),
+                return RefreshIndicator(
+                  onRefresh: () async {
+                    setState(() {
+                      futureComputers = loadComputers();
+                    });
+                  },
+                  child: PopularComputerBar(
+                    searchQuery:
+                        _searchController.text, // Pass search query here
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

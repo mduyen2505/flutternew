@@ -51,6 +51,8 @@ class PopularComputerBarState extends State<PopularComputerBar> {
         return RefreshIndicator(
           onRefresh: _refreshComputers,
           child: GridView.builder(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 20.0), // Add padding for GridView items
             shrinkWrap: true,
             physics: const AlwaysScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
