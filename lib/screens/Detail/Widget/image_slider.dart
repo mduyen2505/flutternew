@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class MyImageSlider extends StatelessWidget {
   final Function(int) onChange;
-  final String image;
+  final List<String> images;
 
   const MyImageSlider({
     super.key,
-    required this.image,
+    required this.images,
     required this.onChange,
   });
 
@@ -16,8 +16,17 @@ class MyImageSlider extends StatelessWidget {
       height: 250,
       child: PageView.builder(
         onPageChanged: onChange,
+        itemCount: images.length,
         itemBuilder: (context, index) {
-          return Image.asset(image);
+          return Image.network(
+            images[index],
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return const Center(
+                child: Text("Image not available"),
+              );
+            },
+          );
         },
       ),
     );

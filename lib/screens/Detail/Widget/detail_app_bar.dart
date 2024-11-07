@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DetailAppBar extends StatelessWidget {
   const DetailAppBar({super.key});
@@ -7,21 +7,23 @@ class DetailAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10), // Add padding to the container
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment:
+            MainAxisAlignment.spaceBetween, // Adjust the alignment of items
         children: [
+          // Left-side back button (SVG)
           IconButton(
-            style: IconButton.styleFrom(
-              padding: const EdgeInsets.all(15),
-              backgroundColor: Colors.white,
-            ),
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: const Icon(Icons.arrow_back_ios),
+            icon: SvgPicture.asset(
+              'images/icons/alt-arrow-left-svgrepo-com.svg', // Path to your SVG file
+              height: 30, // Adjust size as needed
+              width: 30, // Adjust size as needed
+            ),
           ),
-          // Phần Text ở giữa
+          // Centered text
           const Text(
             "Product Details",
             style: TextStyle(
@@ -30,20 +32,8 @@ class DetailAppBar extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-
-          // Nút yêu thích
-          IconButton(
-            style: IconButton.styleFrom(
-              padding: const EdgeInsets.all(15),
-              backgroundColor: Colors.white,
-            ),
-            onPressed: () {},
-            icon: SvgPicture.asset(
-              'images/icons/favorite-svgrepo-com.svg', //
-              height: 24, // Kích thước tùy chỉnh
-              width: 24,
-            ),
-          ),
+          // Empty widget to maintain space between text and back button (to ensure proper layout)
+          const SizedBox(width: 60), // Add some space on the right side
         ],
       ),
     );

@@ -126,7 +126,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: Text(
-                                      computer.name,
+                                      '${computer.productsTypeName} - ${computer.name}', // Concatenate productsTypeName and name
                                       style: const TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,

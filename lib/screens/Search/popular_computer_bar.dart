@@ -42,11 +42,11 @@ class PopularComputerBarState extends State<PopularComputerBar> {
         }
 
         final computers = snapshot.data!;
-        final filteredComputers = computers
-            .where((computer) => computer.name
-                .toLowerCase()
-                .contains(widget.searchQuery.toLowerCase()))
-            .toList();
+        final filteredComputers = computers.where((computer) {
+          final query = widget.searchQuery.toLowerCase();
+          return computer.name.toLowerCase().contains(query) ||
+              computer.productsTypeName.toLowerCase().contains(query);
+        }).toList();
 
         return RefreshIndicator(
           onRefresh: _refreshComputers,
@@ -136,7 +136,7 @@ class _ComputerItemState extends State<ComputerItem> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      widget.computer.name,
+                      '${widget.computer.productsTypeName} - ${widget.computer.name}', // Display productsTypeName before name
                       style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,

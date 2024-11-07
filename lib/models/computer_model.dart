@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import 'config.dart'; // Import Config for base URL
 
 class Computer {
@@ -7,7 +9,6 @@ class Computer {
   final String name;
   final String imageUrl;
   final double price;
-  final String description;
   final String company;
   final String cpu;
   final String ram;
@@ -16,13 +17,15 @@ class Computer {
   final String weight;
   final String screenResolution;
   final String inches;
+  final String quantityInStock;
+  final String opsys; // New field for operating system
+  final String productsTypeName; // New field for product type name
 
   Computer({
     required this.id,
     required this.name,
     required this.imageUrl,
     required this.price,
-    required this.description,
     required this.company,
     required this.cpu,
     required this.ram,
@@ -31,24 +34,32 @@ class Computer {
     required this.weight,
     required this.screenResolution,
     required this.inches,
+    required this.quantityInStock,
+    required this.opsys,
+    required this.productsTypeName,
   });
 
   factory Computer.fromJson(Map<String, dynamic> json) {
     return Computer(
       id: json['_id'] as String? ?? '',
       name: json['name'] as String? ?? 'Unknown Computer',
-      imageUrl: json['imageUrl'] as String? ??
-          'https://via.placeholder.com/150', // Default image if null
-      price: (json['prices'] as num?)?.toDouble() ?? 0.0, // Price conversion
-      description: json['description'] as String? ?? 'No description available',
+      imageUrl:
+          json['imageUrl'] as String? ?? 'https://via.placeholder.com/150',
+      price: (json['prices'] as num?)?.toDouble() ?? 0.0,
       company: json['company'] as String? ?? 'Unknown Company',
       cpu: json['cpu'] as String? ?? 'Unknown CPU',
       ram: json['ram'] as String? ?? 'Unknown RAM',
       memory: json['memory'] as String? ?? 'Unknown Memory',
       gpu: json['gpu'] as String? ?? 'Unknown GPU',
       weight: json['weight'] as String? ?? 'Unknown Weight',
-      screenResolution: json['screenResolution'] as String? ?? 'Unknown Resolution',
+      screenResolution:
+          json['screenResolution'] as String? ?? 'Unknown Resolution',
       inches: json['inches'] as String? ?? 'Unknown Size',
+      quantityInStock:
+          json['quantityInStock'].toString(), // Ensure quantity as String
+      opsys: json['opsys'] as String? ?? 'Unknown OS', // Parsing opsys
+      productsTypeName: json['productsTypeName'] as String? ??
+          'Unknown Type', // Parsing productsTypeName
     );
   }
 }

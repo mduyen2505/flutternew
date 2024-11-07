@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import intl for currency formatting
 
 class ItemsDetails extends StatelessWidget {
   final Computer popularComputerBar;
@@ -12,74 +12,89 @@ class ItemsDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          popularComputerBar.name,
-          style: const TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 25,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Giá sản phẩm
-                Text(
-                  "\$${popularComputerBar.price.toString()}",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 25,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                // Đánh giá
-                // Row(
-                //   children: [
-                //     Container(
-                //       width: 55,
-                //       height: 25,
-                //       decoration: BoxDecoration(
-                //         borderRadius: BorderRadius.circular(15),
-                //         color: kprimaryColor,
-                //       ),
-                //       alignment: Alignment.center,
-                //       padding: const EdgeInsets.symmetric(horizontal: 5),
-                //       child: Row(
-                //         mainAxisSize: MainAxisSize.min,
-                //         children: [
-                //           const Icon(
-                //             Icons.star,
-                //             size: 15,
-                //             color: Colors.white,
-                //           ),
-                //           const SizedBox(width: 3),
-                //           Text(
-                //             popularComputerBar.rate.toString(),
-                //             style: const TextStyle(
-                //               fontWeight: FontWeight.bold,
-                //               color: Colors.white,
-                //               fontSize: 14,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //     const SizedBox(width: 5,), Text(popularComputerBar.review,style: const TextStyle(
-                //       color: Colors.grey,
-                //       fontSize: 15,
-                //     ),)
-                //   ],
-                // ),
-              ],
+    // Format the price using the Vietnamese currency format
+    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0), // Overall padding for content
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Display productsTypeName before name
+          Text(
+            "${popularComputerBar.productsTypeName} - ${popularComputerBar.name}",
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 25,
+              color: Colors.black,
             ),
-          ],
-        ),
-      ],
+          ),
+          const SizedBox(height: 10),
+
+          // Product price
+          Text(
+            formatCurrency.format(popularComputerBar.price), // Format price with currency
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 22,
+              color: Colors.red,
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // "Description:" title
+          const Text(
+            "Description:",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              letterSpacing: 1.2,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 10), // Space between title and content
+
+          // List of product attributes
+          _buildDetailRow("Type: ", popularComputerBar.productsTypeName),
+          _buildDetailRow("Quantity in Stock: ", popularComputerBar.quantityInStock.toString()),
+          _buildDetailRow("Screen Size: ", "${popularComputerBar.inches} inches"),
+          _buildDetailRow("Screen Resolution: ", popularComputerBar.screenResolution),
+          _buildDetailRow("CPU: ", popularComputerBar.cpu),
+          _buildDetailRow("RAM: ", popularComputerBar.ram),
+          _buildDetailRow("Memory: ", popularComputerBar.memory),
+          _buildDetailRow("GPU: ", popularComputerBar.gpu),
+          _buildDetailRow("Weight: ", "${popularComputerBar.weight} kg"),
+          _buildDetailRow("Operating System: ", popularComputerBar.opsys),
+        ],
+      ),
+    );
+  }
+
+  // Method to build detail rows
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0), // Space between rows
+      child: Row(
+        children: [
+          // Label
+          Expanded(
+            flex: 1,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              maxLines: 1,
+            ),
+          ),
+          // Value
+          Expanded(
+            flex: 2,
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 15),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
