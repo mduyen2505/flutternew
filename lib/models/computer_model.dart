@@ -20,6 +20,7 @@ class Computer {
   final String quantityInStock;
   final String opsys; // New field for operating system
   final String productsTypeName; // New field for product type name
+  int quantity;
 
   Computer({
     required this.id,
@@ -37,6 +38,8 @@ class Computer {
     required this.quantityInStock,
     required this.opsys,
     required this.productsTypeName,
+    this.quantity = 1,
+    
   });
 
   factory Computer.fromJson(Map<String, dynamic> json) {
@@ -60,6 +63,7 @@ class Computer {
       opsys: json['opsys'] as String? ?? 'Unknown OS', // Parsing opsys
       productsTypeName: json['productsTypeName'] as String? ??
           'Unknown Type', // Parsing productsTypeName
+       quantity: json['quantity'] ?? 1, // Số lượng khi tạo từ JSON
     );
   }
 }

@@ -1,4 +1,5 @@
 //Dổi đường uri localhost ở đây nè >>
 class Config {
-  static const String baseUrl = 'https://60e5-2001-ee0-1b03-1d63-b1d2-7a23-62e5-8777.ngrok-free.app/api';
+  static const String baseUrl = 'https://71c0-115-79-24-209.ngrok-free.app/api';
+  // 'http://192.168.47.169:3001/api/product/getAllProduct';
 }

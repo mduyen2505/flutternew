@@ -1,3 +1,4 @@
+import 'package:HDTech/Provider/cart_provider.dart';
 import 'package:HDTech/presentation/splash/pages/splash.dart';
 import 'package:HDTech/screens/Auth/screeens/onboarding.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,6 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:provider/provider.dart';
+
+
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,13 +27,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        scaffoldBackgroundColor: Colors.white,
-        textTheme: GoogleFonts.mulishTextTheme(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+          textTheme: GoogleFonts.mulishTextTheme(),
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }

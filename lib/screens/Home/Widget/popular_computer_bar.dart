@@ -1,8 +1,10 @@
 import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
 import 'package:HDTech/screens/Detail/detail_screen.dart';
+import 'package:HDTech/Provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PopularComputerBar extends StatefulWidget {
   final bool isRefreshing;
@@ -32,6 +34,9 @@ class PopularComputerBarState extends State<PopularComputerBar> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CartProvider>(context,
+        listen: false); // Khai báo provider để sử dụng addToCart
+
     return FutureBuilder<List<Computer>>(
       future: futureComputers,
       builder: (context, snapshot) {
@@ -158,7 +163,51 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                               right: 0,
                               child: GestureDetector(
                                 onTap: () {
-                                  debugPrint('Added ${computer.name} to cart!');
+                                  provider.addToCart(computer,
+                                      quantity:
+                                          1); // Thêm sản phẩm vào giỏ hàng
+
+                                  // Hiển thị SnackBar để xác nhận
+                                  final snackBar = SnackBar(
+                                    content: const Row(
+                                      children: [
+                                        Icon(Icons.check_circle,
+                                            color: Colors.white, size: 20),
+                                        SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            "Successfully added to cart!",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    backgroundColor: Colors.green[500],
+                                    behavior: SnackBarBehavior.floating,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    action: SnackBarAction(
+                                      label: 'Close',
+                                      textColor: Colors.white,
+                                      onPressed: () {
+                                        ScaffoldMessenger.of(context)
+                                            .hideCurrentSnackBar();
+                                      },
+                                    ),
+                                    duration: const Duration(seconds: 1),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                  );
+
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(snackBar);
                                 },
                                 child: Container(
                                   width: 35,

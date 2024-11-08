@@ -1,6 +1,8 @@
+import 'package:HDTech/Provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
+import 'package:provider/provider.dart';
 
 class AddToCart extends StatefulWidget {
   final Computer popularComputerBar;
@@ -16,6 +18,8 @@ class _AddToCartState extends State<AddToCart> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<CartProvider>(context, listen: false);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Container(
@@ -26,15 +30,18 @@ class _AddToCartState extends State<AddToCart> {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 15),
         alignment: Alignment.center,
+        
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            // Widget tăng giảm số lượng sản phẩm
             Container(
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(color: Colors.white, width: 2),
               ),
+              
               child: Row(
                 children: [
                   IconButton(
@@ -44,11 +51,9 @@ class _AddToCartState extends State<AddToCart> {
                       });
                     },
                     iconSize: 18,
-                    icon: const Icon(
-                      Icons.remove,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.remove, color: Colors.white),
                   ),
+                  
                   const SizedBox(width: 5),
                   Text(
                     currentIndex.toString(),
@@ -57,6 +62,7 @@ class _AddToCartState extends State<AddToCart> {
                       color: Colors.white,
                     ),
                   ),
+                  
                   const SizedBox(width: 5),
                   IconButton(
                     onPressed: () {
@@ -65,19 +71,54 @@ class _AddToCartState extends State<AddToCart> {
                       });
                     },
                     iconSize: 18,
-                    icon: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.add, color: Colors.white),
                   ),
                 ],
               ),
             ),
+            
+            // Nút "Add to Cart" với SnackBar tùy chỉnh
             GestureDetector(
               onTap: () {
-                // Thêm chức năng xử lý khi nhấn nút "Add to Cart" ở đây
-                // Ví dụ: print("Added to cart: $currentIndex items");
+                provider.addToCart(widget.popularComputerBar, quantity: currentIndex);
+
+                final snackBar = SnackBar(
+                  content: Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "Successfully added to cart!",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  backgroundColor: Colors.green[500],
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  action: SnackBarAction(
+                    label: 'Close',
+                    textColor: Colors.white,
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    },
+                  ),
+                  duration: const Duration(seconds: 1),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
               },
+              
               child: Container(
                 height: 55,
                 decoration: BoxDecoration(
