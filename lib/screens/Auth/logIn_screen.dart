@@ -132,21 +132,20 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Center(
             child: Container(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     decoration: const BoxDecoration(
-                      color: Color(0xFFD70014),
                       shape: BoxShape.circle,
                     ),
                     padding: const EdgeInsets.all(10),
                     child: ClipOval(
                       child: SvgPicture.asset(
-                        'images/logo-app/logo.svg',
-                        height: 90,
+                        'images/logo-app/logo-white-bg.svg',
+                        height: 100,
                         fit: BoxFit.cover,
                       ),
                     ),

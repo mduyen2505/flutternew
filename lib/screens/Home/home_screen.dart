@@ -1,3 +1,4 @@
+import 'package:HDTech/models/computer_model.dart';
 import 'package:HDTech/screens/Home/Widget/banner_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/home_app_bar.dart';
 import 'package:HDTech/screens/Home/Widget/popular_computer_bar.dart';
@@ -13,17 +14,33 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<String> bannerUrls = [];
   bool _isRefreshing = false;
   final GlobalKey<PopularComputerBarState> popularComputerBarKey =
       GlobalKey<PopularComputerBarState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchBannerUrls();
+  }
+
+  Future<void> _fetchBannerUrls() async {
+    final List<Computer> computers = await loadComputers();
+    setState(() {
+      bannerUrls = computers
+          .where((computer) => computer.bannerUrl != null)
+          .map((computer) => computer.bannerUrl!)
+          .toList();
+    });
+  }
 
   Future<void> _refreshData() async {
     setState(() {
       _isRefreshing = true;
     });
     await Future.delayed(const Duration(seconds: 2));
-    popularComputerBarKey.currentState
-        ?.reloadComputers(); // Calls reloadComputers using the key
+    popularComputerBarKey.currentState?.reloadComputers();
     setState(() {
       _isRefreshing = false;
     });
@@ -41,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: Color.fromARGB(255, 241, 241, 241),
               elevation: 0,
               title: CustomAppBar(),
-              automaticallyImplyLeading: false, // Disable back button
+              automaticallyImplyLeading: false,
               pinned: true,
               floating: false,
             ),
@@ -57,12 +74,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           duration: const Duration(milliseconds: 500),
                           childAnimationBuilder: (widget) => SlideAnimation(
                             verticalOffset: 50.0,
-                            child: FadeInAnimation(
-                              child: widget,
-                            ),
+                            child: FadeInAnimation(child: widget),
                           ),
                           children: [
-                            const BannerAppBar(),
+                            BannerAppBar(bannerUrls: bannerUrls),
                             const SizedBox(height: 10),
                             const TrademarkAppBar(),
                             const SizedBox(height: 10),

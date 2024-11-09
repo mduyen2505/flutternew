@@ -1,15 +1,20 @@
-import 'dart:async'; // Add this import
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
 class BannerAppBar extends StatefulWidget {
-  const BannerAppBar({super.key});
+  final List<String> bannerUrls; // Accept a list of banner URLs
+
+  const BannerAppBar({
+    super.key,
+    required this.bannerUrls, // Make bannerUrls required
+  });
 
   @override
-  _BannerAppBarState createState() => _BannerAppBarState();
+  BannerAppBarState createState() => BannerAppBarState();
 }
 
-class _BannerAppBarState extends State<BannerAppBar> {
+class BannerAppBarState extends State<BannerAppBar> {
   late PageController _pageController;
   int _currentPage = 0;
   late Timer _timer;
@@ -30,7 +35,7 @@ class _BannerAppBarState extends State<BannerAppBar> {
 
   void _startAutoScroll() {
     _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < 4) {
+      if (_currentPage < widget.bannerUrls.length - 1) {
         _currentPage++;
       } else {
         _currentPage = 0;
@@ -45,29 +50,28 @@ class _BannerAppBarState extends State<BannerAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    // Check if there are any valid banners to display
+    if (widget.bannerUrls.isEmpty) {
+      return const SizedBox(); // Return empty if no banners
+    }
     return SizedBox(
       height: 180, // Set the height for the banner
       child: PageView(
         controller: _pageController,
-        children: [
-          _buildBannerImage(
-              'images/banners/1646813262_banner.jpg'), // Replace with your images
-          _buildBannerImage('images/banners/ms_banner_img4.jpg'),
-          _buildBannerImage('images/banners/banner-thanhlymaytinhnet.jpg'),
-          _buildBannerImage('images/banners/zyro-image.png-1024x384.jpg'),
-          _buildBannerImage('images/banners/1101_ctkkm-laptop-xin-1.jpg'),
-        ],
+        children:
+            widget.bannerUrls.map((url) => _buildBannerImage(url)).toList(),
       ),
     );
   }
 
-  Widget _buildBannerImage(String imagePath) {
+  Widget _buildBannerImage(String imageUrl) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20), // Round the corners
-      child: Image.asset(
-        imagePath,
+      child: Image.network(
+        imageUrl,
         fit: BoxFit.cover, // Scale the image to cover the banner
         width: double.infinity, // Make the image full width
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.error),
       ),
     );
   }
