@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
 import 'package:provider/provider.dart';
+import 'package:HDTech/screens/Auth/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddToCart extends StatefulWidget {
   final Computer popularComputerBar;
@@ -15,6 +17,36 @@ class AddToCart extends StatefulWidget {
 
 class _AddToCartState extends State<AddToCart> {
   int currentIndex = 1;
+  bool _isLoggedIn = false;
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus(); // Kiểm tra trạng thái đăng nhập khi khởi tạo
+  }
+
+  void _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    });
+  }
+
+  Future<void> _navigateToLogin() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+
+    // Nếu người dùng đăng nhập thành công, cập nhật trạng thái
+    if (result == true) {
+      setState(() {
+        _isLoggedIn = true;
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +111,17 @@ class _AddToCartState extends State<AddToCart> {
             
             // Nút "Add to Cart" với SnackBar tùy chỉnh
             GestureDetector(
-              onTap: () {
+               onTap: () async {
+                // Kiểm tra xem người dùng có đăng nhập hay không
+                if (!_isLoggedIn) {
+                  // Nếu chưa đăng nhập, yêu cầu người dùng đăng nhập
+                    bool shouldLogin = await _showLoginDialog(context); // Hiển thị hộp thoại yêu cầu đăng nhập
+                  if (!shouldLogin) return; // Nếu người dùng không muốn đăng nhập, không làm gì
+                  await _navigateToLogin(); // Điều hướng đến màn hình đăng nhập
+                  if (!_isLoggedIn) return; // Nếu sau khi đăng nhập người dùng vẫn chưa đăng nhập, không tiếp tục
+                }
+
+                // Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng
                 provider.addToCart(widget.popularComputerBar, quantity: currentIndex);
 
                 final snackBar = SnackBar(
@@ -142,4 +184,98 @@ class _AddToCartState extends State<AddToCart> {
       ),
     );
   }
+}
+// Hiển thị hộp thoại yêu cầu đăng nhập
+Future<bool> _showLoginDialog(BuildContext context) async {
+  return await showDialog<bool>(
+    context: context,
+    barrierDismissible: false, // Ngăn không cho đóng hộp thoại khi bấm ra ngoài
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        ),
+        elevation: 5,
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Tiêu đề
+              Text(
+                "Login Required",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(height: 10),
+              
+              // Nội dung hộp thoại
+              Text(
+                "You need to be logged in to add items to the cart. Would you like to log in now?",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 20),
+              
+              // Các nút lựa chọn
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Nút "No"
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false); // Nếu người dùng chọn "No"
+                    },
+                    child: Text(
+                      "No",
+                      style: TextStyle(
+                        color: Colors.red[400],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  
+                  // Nút "Yes"
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true); // Nếu người dùng chọn "Yes"
+                    },
+                    child: Text(
+                      "Yes",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  ) ?? false; // Trả về false nếu người dùng không chọn gì
 }
