@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:HDTech/models/api_service.dart'; // Import ApiService
-import 'package:HDTech/screens/Auth/Login_screen.dart';
+import 'package:HDTech/models/api_service.dart';
+import 'package:HDTech/screens/Auth/logIn_screen.dart';
+import 'package:HDTech/screens/Auth/otp_screeen.dart';
 import 'package:HDTech/screens/nav_bar_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SignUpScene extends StatefulWidget {
@@ -109,7 +110,24 @@ class _SignUpSceneState extends State<SignUpScene> {
 
   void _navigateToNextPage() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const BottomNavBar()),
+      MaterialPageRoute(
+        builder: (context) => OtpScreen(
+          name: _nameController.text,
+          email: _emailController.text,
+          phone: _phoneController.text,
+          password: _passwordController.text,
+          confirmPassword: _confirmPasswordController.text,
+        ),
+      ),
+    );
+  }
+
+  void _navigateToPreviousPage() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) =>
+            const BottomNavBar(), // Điều hướng đến trang BottomNavigationBar
+      ),
     );
   }
 
@@ -304,7 +322,7 @@ class _SignUpSceneState extends State<SignUpScene> {
                           width: 30,
                           height: 30,
                         ),
-                        onPressed: _navigateToNextPage,
+                        onPressed: _navigateToPreviousPage,
                       ),
                     ],
                   ),

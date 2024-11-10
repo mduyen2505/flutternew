@@ -1,5 +1,5 @@
 import 'package:HDTech/models/api_service.dart';
-import 'package:HDTech/screens/Auth/Register_screen.dart';
+import 'package:HDTech/screens/Auth/register_screen.dart';
 import 'package:HDTech/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';

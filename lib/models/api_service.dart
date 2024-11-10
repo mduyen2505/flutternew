@@ -1,6 +1,11 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
-import 'config.dart'; // Thêm import này
+import 'package:logger/logger.dart';
+
+import 'config.dart'; // Thêm import này\
+
+final Logger logger = Logger();
 
 class ApiService {
   final String baseUrl = Config.baseUrl; // Sử dụng baseUrl từ Config
@@ -18,11 +23,11 @@ class ApiService {
         return jsonDecode(response.body);
       } else {
         // Thêm thông báo lỗi dựa trên mã trạng thái
-        print('Error: ${response.statusCode}, ${response.body}');
-        return {'error': 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'};
+        return {
+          'error': 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'
+        };
       }
     } catch (e) {
-      print('Caught error: $e');
       return {'error': 'Đã xảy ra lỗi mạng, vui lòng thử lại.'};
     }
   }
@@ -45,12 +50,46 @@ class ApiService {
       if (response.statusCode == 200) {
         return true; // Đăng ký thành công
       } else {
-        print('Error: ${response.body}');
         return false; // Đăng ký thất bại
       }
     } catch (e) {
-      print('Caught error: $e');
       return false; // Đăng ký thất bại do lỗi mạng
+    }
+  }
+
+  Future<bool> verifyOtp(String email, String otpToken) async {
+    logger.d('Email: $email');
+    logger.d('OTP Token: $otpToken');
+
+    try {
+      final response = await http.post(
+        Uri.parse('${Config.baseUrl}/otp/verify-otp'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'email': email,
+          'otpToken': otpToken,
+        }),
+      );
+
+      logger.d('Response Status Code: ${response.statusCode}');
+      logger.d('Response Body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final jsonResponse = jsonDecode(response.body);
+        logger.d('Parsed Response: $jsonResponse');
+
+        // Kiểm tra trường message
+        if (jsonResponse['message'] == 'User registered successfully') {
+          return true; // OTP verified successfully
+        } else {
+          return false; // OTP verification failed
+        }
+      } else {
+        return false; // Nếu mã trạng thái không phải 201, trả về false
+      }
+    } catch (e) {
+      logger.d('Exception occurred: $e');
+      return false; // Nếu có lỗi trong quá trình gọi API
     }
   }
 }

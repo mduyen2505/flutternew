@@ -1,4 +1,4 @@
-import 'package:HDTech/screens/Auth/Register_screen.dart';
+import 'package:HDTech/screens/Auth/register_screen.dart';
 import 'package:HDTech/screens/Auth/login_screen.dart';
 import 'package:HDTech/screens/Menu/Widget/account_app_bar.dart';
 import 'package:HDTech/screens/Menu/Widget/app_setting.dart';
@@ -29,7 +29,6 @@ class _MenuUserState extends State<MenuUser> {
     setState(() {
       _isLoggedIn =
           prefs.getBool('isLoggedIn') ?? false; // Kiểm tra trạng thái đăng nhập
-      print("Login status loaded: $_isLoggedIn"); // Thêm dòng này để kiểm tra
     });
   }
 
@@ -53,7 +52,6 @@ class _MenuUserState extends State<MenuUser> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(
         'isLoggedIn', status); // Lưu trạng thái vào SharedPreferences
-    print("Login status saved: $status"); // Thêm dòng này để kiểm tra
   }
 
 
