@@ -26,11 +26,9 @@ class AccountService {
       if (jsonResponse['status'] == 'Oke' && jsonResponse['data'] != null) {
         return jsonResponse['data']; // Trả về thông tin người dùng
       } else {
-        print('Failed to load user details: ${jsonResponse['massage']}');
         return null;
       }
     } else {
-      print('Failed to load user details: ${response.statusCode}');
       return null;
     }
   }

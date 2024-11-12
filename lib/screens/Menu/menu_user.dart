@@ -1,5 +1,5 @@
-import 'package:HDTech/screens/Auth/register_screen.dart';
 import 'package:HDTech/screens/Auth/login_screen.dart';
+import 'package:HDTech/screens/Auth/register_screen.dart';
 import 'package:HDTech/screens/Menu/Widget/account_app_bar.dart';
 import 'package:HDTech/screens/Menu/Widget/app_setting.dart';
 import 'package:HDTech/screens/Menu/Widget/menu_login_app.dart';
@@ -54,49 +54,65 @@ class _MenuUserState extends State<MenuUser> {
         'isLoggedIn', status); // Lưu trạng thái vào SharedPreferences
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: AnimationLimiter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: AnimationConfiguration.toStaggeredList(
-                duration: const Duration(milliseconds: 500),
-                childAnimationBuilder: (widget) => SlideAnimation(
-                  verticalOffset: 50.0,
-                  child: FadeInAnimation(
-                    child: widget,
+      body: Stack(
+        children: [
+          // Phần nội dung cuộn nằm bên dưới TitleAccountAppBar
+          Padding(
+            padding: const EdgeInsets.only(top: 30), // Dưới tiêu đề cố định
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: AnimationLimiter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: AnimationConfiguration.toStaggeredList(
+                      duration: const Duration(milliseconds: 500),
+                      childAnimationBuilder: (widget) => SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: widget,
+                        ),
+                      ),
+                      children: [
+                        const SizedBox(height: 25),
+                        if (_isLoggedIn) ...[
+                          const AccountPage(),
+                          const SizedBox(height: 15),
+                          const AppSetting(),
+                        ] else ...[
+                          MenuLoginApp(
+                            onLogin: _handleLogin,
+                            onSignUp: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const SignUpScene(),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ],
+                    ),
                   ),
                 ),
-                children: [
-                  const SizedBox(height: 25),
-                  if (_isLoggedIn) ...[
-                    const TitleAccountAppBar(),
-                    const AccountPage(),
-                    const SizedBox(height: 15),
-                    const AppSetting(),
-                  ] else ...[
-                    MenuLoginApp(
-                      onLogin: _handleLogin,
-                      onSignUp: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const SignUpScene(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ],
               ),
             ),
           ),
-        ),
+          // TitleAccountAppBar cố định ở trên cùng
+          Positioned(
+            top: 30,
+            left: 0,
+            right: 0,
+            child: Container(
+              color: Colors.white, // Màu nền trắng cho TitleAccountAppBar
+              child: const TitleAccountAppBar(),
+            ),
+          ),
+        ],
       ),
     );
   }

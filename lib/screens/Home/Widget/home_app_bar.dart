@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:geocoding/geocoding.dart'; // Thêm import cho geocoding
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 class CustomAppBar extends StatefulWidget {
-  const CustomAppBar({super.key});
+  final void Function(Map<String, dynamic>) onFilterChanged;
+
+  const CustomAppBar({super.key, required this.onFilterChanged});
 
   @override
-  _CustomAppBarState createState() => _CustomAppBarState();
+  CustomAppBarState createState() => CustomAppBarState();
 }
 
-class _CustomAppBarState extends State<CustomAppBar> {
+class CustomAppBarState extends State<CustomAppBar> {
   String _currentLocation = 'Loading...';
 
   @override
@@ -20,7 +22,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
   }
 
   Future<void> _getCurrentLocation() async {
-    // Kiểm tra quyền truy cập vị trí
+    // Check location permission
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -28,26 +30,26 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     if (permission == LocationPermission.deniedForever) {
       setState(() {
-        _currentLocation = 'Không có quyền truy cập vị trí';
+        _currentLocation = 'No location access permission';
       });
       return;
     }
 
     String abbreviate(String text) {
-      // Tách chuỗi thành danh sách từ và lấy chữ cái đầu của mỗi từ
       return text
           .split(' ')
           .map((word) => word.isNotEmpty ? word[0] : '')
           .join('')
-          .toUpperCase(); // Viết hoa
+          .toUpperCase();
     }
 
     try {
-      // Lấy vị trí hiện tại
+      // Get current position
       Position position = await Geolocator.getCurrentPosition(
+          // ignore: deprecated_member_use
           desiredAccuracy: LocationAccuracy.high);
 
-      // Chuyển đổi tọa độ thành địa chỉ
+      // Get address from coordinates
       List<Placemark> placemarks =
           await placemarkFromCoordinates(position.latitude, position.longitude);
 
@@ -55,7 +57,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
         Placemark place = placemarks[0];
 
         setState(() {
-          // Định dạng địa chỉ: Tên đường và viết tắt administrativeArea
           String street = place.thoroughfare
                   ?.replaceAll("Đường", "St.")
                   .replaceAll("Street", "St.")
@@ -64,9 +65,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           String administrativeAreaAbbr =
               abbreviate(place.administrativeArea ?? '');
 
-          // Kiểm tra độ dài của địa chỉ
           if (street.length + administrativeAreaAbbr.length > 20) {
-            // 20 là độ dài tối đa
             _currentLocation = '$street, $administrativeAreaAbbr';
           } else {
             _currentLocation =
@@ -80,9 +79,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
       }
     } catch (e) {
       setState(() {
-        _currentLocation = 'Unable to get location'; // Hiển thị lỗi chi tiết
+        _currentLocation = 'Unable to get location';
       });
-      print('Error getting location');
     }
   }
 
@@ -91,19 +89,20 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // IconButton đầu tiên
         IconButton(
           style: IconButton.styleFrom(
             backgroundColor: Colors.white,
             padding: const EdgeInsets.all(10),
           ),
-          onPressed: () {},
+          onPressed: () {
+            // Mở FilterDrawer khi ấn vào nút lọc
+            Scaffold.of(context).openDrawer(); // Mở Drawer
+          },
           icon: SvgPicture.asset(
             "images/icons/code-scan-svgrepo-com.svg",
             height: 30,
           ),
         ),
-        // Dùng Expanded cho Column
         Expanded(
           child: SizedBox(
             height: 38,
@@ -154,7 +153,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
             ),
           ),
         ),
-        // IconButton thứ hai
         IconButton(
           style: IconButton.styleFrom(
             backgroundColor: Colors.white,

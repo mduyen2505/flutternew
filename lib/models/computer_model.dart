@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'config.dart'; // Import Config for base URL
@@ -43,6 +44,20 @@ class Computer {
     this.bannerUrl,
   });
 
+  // Add this toJson method to resolve the error
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'company': company,
+      'ram': ram,
+      'cpu': cpu,
+      'gpu': gpu,
+      'memory': memory,
+      'price': price,
+    };
+  }
+
   factory Computer.fromJson(Map<String, dynamic> json) {
     return Computer(
       id: json['_id'] as String? ?? '',
@@ -70,15 +85,40 @@ class Computer {
   }
 }
 
-Future<List<Computer>> loadComputers() async {
+Future<List<Computer>> loadComputers({Map<String, dynamic>? filters}) async {
   final response =
       await http.get(Uri.parse('${Config.baseUrl}/product/getAllProduct'));
 
   if (response.statusCode == 200) {
     try {
-      final Map<String, dynamic> jsonResponse = json.decode(response.body);
-      final List<dynamic> data = jsonResponse['data'];
-      return data.map((json) => Computer.fromJson(json)).toList();
+      final jsonResponse = json.decode(response.body);
+      final data = jsonResponse['data'] as List;
+      var computers = data.map((json) => Computer.fromJson(json)).toList();
+
+      if (filters != null && filters.isNotEmpty) {
+        computers = computers.where((computer) {
+          bool matches = true;
+          filters.forEach((field, value) {
+            if (field == 'price') {
+              // Handle price filter as a range
+              if (value is RangeValues) {
+                matches &= (computer.price >= value.start &&
+                    computer.price <= value.end);
+              }
+            } else if (value is List) {
+              // For list filters (company, ram, etc.), check if the value is in the list
+              matches &= value.contains(computer.toJson()[field]?.toString());
+            } else {
+              // For exact match filters (like productTypeName), check equality
+              matches &=
+                  computer.toJson()[field]?.toString() == value?.toString();
+            }
+          });
+          return matches;
+        }).toList();
+      }
+
+      return computers;
     } catch (e) {
       throw Exception('Failed to parse computers: $e');
     }

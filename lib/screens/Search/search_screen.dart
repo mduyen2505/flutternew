@@ -53,13 +53,6 @@ class _SearchScreenState extends State<SearchScreen> {
               decoration: InputDecoration(
                 hintText: "Search...",
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.tune), // Icon for filter
-                  onPressed: () {
-                    // Add your filter action here
-                    print("Filter icon pressed");
-                  },
-                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(50.0),
                 ),

@@ -1,7 +1,11 @@
 import 'package:HDTech/models/account_service.dart';
+import 'package:HDTech/models/user_model.dart'; // Assuming you have the User model
+import 'package:HDTech/screens/Menu/Popup_accounts/delete_account.dart';
+import 'package:HDTech/screens/Menu/Popup_accounts/update_user_popup.dart'; // Add this import for the popup
+import 'package:HDTech/screens/Menu/Widget/information_app.dart';
 import 'package:HDTech/screens/nav_bar_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
@@ -28,6 +32,7 @@ class _AccountPageState extends State<AccountPage> {
     await prefs.remove('password'); // Remove saved password
 
     // Navigate to the login screen
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) => const BottomNavBar()),
     );
@@ -36,7 +41,59 @@ class _AccountPageState extends State<AccountPage> {
   Future<void> _loadUserData() async {
     AccountService accountService = AccountService();
     _userDetails = await accountService.getUserDetails();
+
+    // Ensure that the phone field is converted to a string
+    if (_userDetails != null) {
+      _userDetails!['phone'] = _userDetails!['phone'].toString();
+    }
+
     setState(() {}); // Refresh the UI
+  }
+
+  Future<void> _showUpdateUserPopup() async {
+    if (_userDetails != null) {
+      final user = User(
+        userId: _userDetails!['userId'] is String
+            ? _userDetails!['userId']
+            : _userDetails!['userId'].toString(),
+        name: _userDetails!['name'] ?? 'Unknown',
+        email: _userDetails!['email'] ?? 'unknown@unknown.com',
+        phone: _userDetails!['phone'].toString(), // Convert phone to string
+      );
+
+      // Show UpdateUserPopup dialog
+      final updatedUser = await showDialog<User>(
+        context: context,
+        builder: (BuildContext context) {
+          return UpdateUserPopup(
+            user: user,
+            onSave: (updatedUser) async {
+              // Handle saving updated user when saved
+              await _saveUpdatedUser(updatedUser);
+            },
+          );
+        },
+      );
+
+      // If there's an updated user, refresh data
+      if (updatedUser != null) {
+        _saveUpdatedUser(updatedUser);
+      }
+    }
+  }
+
+  Future<void> _saveUpdatedUser(User updatedUser) async {
+    // Add your logic to save the updated user information
+    // For example, send the data to the server or update SharedPreferences.
+    // After saving, reload user data
+    setState(() {
+      _userDetails = {
+        'userId': updatedUser.userId,
+        'name': updatedUser.name,
+        'email': updatedUser.email,
+        'phone': updatedUser.phone,
+      };
+    });
   }
 
   Widget _buildAccountButton(
@@ -95,7 +152,7 @@ class _AccountPageState extends State<AccountPage> {
                 padding: const EdgeInsets.all(0),
                 minimumSize: const Size(150, 50),
               ),
-              onPressed: () {}, // Add functionality later
+              onPressed: _showUpdateUserPopup, // Open the update popup
               child: Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
@@ -125,7 +182,10 @@ class _AccountPageState extends State<AccountPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _userDetails?['name'] ?? 'Unknown',
+                              _userDetails?['name'] != null &&
+                                      _userDetails!['name'].length > 14
+                                  ? '${_userDetails!['name'].substring(0, 14)}...'
+                                  : _userDetails?['name'] ?? 'Unknown',
                               style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -133,7 +193,11 @@ class _AccountPageState extends State<AccountPage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              _userDetails?['email'] ?? 'unknown@unknown.com',
+                              _userDetails?['email'] != null &&
+                                      _userDetails!['email'].length > 20
+                                  ? '${_userDetails!['email'].substring(0, 20)}...'
+                                  : _userDetails?['email'] ??
+                                      'unknown@unknown.com',
                               style: const TextStyle(
                                   fontSize: 14, color: Colors.white70),
                             ),
@@ -144,6 +208,7 @@ class _AccountPageState extends State<AccountPage> {
                     SvgPicture.asset(
                       "images/icons/ruler-cross-pen-svgrepo-com.svg",
                       height: 25,
+                      // ignore: deprecated_member_use
                       color: Colors.white,
                     ),
                   ],
@@ -154,14 +219,22 @@ class _AccountPageState extends State<AccountPage> {
 
           const SizedBox(height: 16),
 
-          // Button for Notification Settings
-          _buildAccountButton('Notification Setting',
-              "images/icons/bell-bing-svgrepo-com.svg", () {}),
+          // Button for Information Settings
+          _buildAccountButton(
+            'Information',
+            "images/icons/danger-circle-svgrepo-com.svg",
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Information()),
+              );
+            },
+          ),
           const SizedBox(height: 16),
 
           // Button for Shipping Address
           _buildAccountButton(
-              'Shipping Address', "images/icons/cart-2-svgrepo-com.svg", () {}),
+              'Order status', "images/icons/cart-2-svgrepo-com.svg", () {}),
           const SizedBox(height: 16),
 
           // Button for Payment Info
@@ -170,8 +243,17 @@ class _AccountPageState extends State<AccountPage> {
           const SizedBox(height: 16),
 
           // Button for Delete Account
-          _buildAccountButton('Delete Account',
-              "images/icons/trash-bin-trash-svgrepo-com.svg", () {}),
+          _buildAccountButton(
+            'Delete Account',
+            "images/icons/trash-bin-trash-svgrepo-com.svg",
+            () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DeleteAccount()));
+            },
+          ),
+
           const SizedBox(height: 16),
 
           // Logout button

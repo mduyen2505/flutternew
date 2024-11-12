@@ -138,7 +138,7 @@ class _ComputerItemState extends State<ComputerItem> {
                     child: Text(
                       '${widget.computer.productsTypeName} - ${widget.computer.name}', // Display productsTypeName before name
                       style: const TextStyle(
-                        fontSize: 17,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2,
@@ -151,7 +151,7 @@ class _ComputerItemState extends State<ComputerItem> {
                     child: Text(
                       formatCurrency.format(widget.computer.price),
                       style: const TextStyle(
-                        fontSize: 15,
+                        fontSize: 18,
                         color: kprimaryColor,
                         fontWeight: FontWeight.bold,
                       ),
@@ -160,29 +160,29 @@ class _ComputerItemState extends State<ComputerItem> {
                 ],
               ),
             ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: GestureDetector(
-                onTap: () => _addToCart(widget.computer.name),
-                child: Container(
-                  width: 35,
-                  height: 35,
-                  decoration: const BoxDecoration(
-                    color: kprimaryColor,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      bottomRight: Radius.circular(12),
-                    ),
-                  ),
-                  child: const Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                ),
-              ),
-            ),
+            // Positioned(
+            //   bottom: 0,
+            //   right: 0,
+            //   child: GestureDetector(
+            //     onTap: () => _addToCart(widget.computer.name),
+            //     child: Container(
+            //       width: 35,
+            //       height: 35,
+            //       decoration: const BoxDecoration(
+            //         color: kprimaryColor,
+            //         borderRadius: BorderRadius.only(
+            //           topLeft: Radius.circular(12),
+            //           bottomRight: Radius.circular(12),
+            //         ),
+            //       ),
+            //       child: const Icon(
+            //         Icons.add,
+            //         color: Colors.white,
+            //         size: 20,
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

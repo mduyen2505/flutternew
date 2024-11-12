@@ -1,17 +1,23 @@
+import 'package:HDTech/Provider/cart_provider.dart';
 import 'package:HDTech/constants.dart';
 import 'package:HDTech/models/computer_model.dart';
+import 'package:HDTech/screens/Auth/login_screen.dart';
 import 'package:HDTech/screens/Detail/detail_screen.dart';
-import 'package:HDTech/Provider/cart_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:HDTech/screens/Auth/login_screen.dart';
 
 class PopularComputerBar extends StatefulWidget {
   final bool isRefreshing;
+  final List<Computer> computers; // Add this line
+  final Map<String, dynamic> filters; // Added this line for filters
 
-  const PopularComputerBar({super.key, this.isRefreshing = false});
+  const PopularComputerBar(
+      {super.key,
+      this.isRefreshing = false,
+      required this.computers,
+      required this.filters}); // Modified constructor
 
   @override
   PopularComputerBarState createState() => PopularComputerBarState();
@@ -32,7 +38,8 @@ class PopularComputerBarState extends State<PopularComputerBar> {
 
   void reloadComputers() {
     setState(() {
-      futureComputers = loadComputers();
+      futureComputers =
+          loadComputers(); // Triggers rebuild with the filtered data
     });
   }
 
@@ -41,6 +48,38 @@ class PopularComputerBarState extends State<PopularComputerBar> {
     setState(() {
       _isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     });
+  }
+
+  // Modify the loadComputers function to show all products initially
+  Future<List<Computer>> loadComputers() async {
+    // Return the full list of computers if no filters are applied
+    List<Computer> filteredComputers = widget.computers;
+
+    // If filters are applied, filter the list accordingly
+    if (widget.filters.isNotEmpty) {
+      // Apply price filter if present
+      if (widget.filters.containsKey('price')) {
+        final RangeValues priceRange = widget.filters['price'];
+        filteredComputers = filteredComputers
+            .where((computer) =>
+                computer.price >= priceRange.start &&
+                computer.price <= priceRange.end)
+            .toList();
+      }
+
+      // Apply other filters (company, RAM, CPU, etc.)
+      widget.filters.forEach((key, value) {
+        if (key != 'price') {
+          filteredComputers = filteredComputers
+              .where((computer) =>
+                  (computer.toJson()[key] as List).contains(value))
+              .toList();
+        }
+      });
+    }
+
+    // Return the filtered list of computers (or all products if no filter)
+    return filteredComputers;
   }
 
   Future<void> _navigateToLogin() async {

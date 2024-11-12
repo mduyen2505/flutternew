@@ -2,32 +2,68 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 
-import 'config.dart'; // Thêm import này\
+import 'config.dart';
 
 final Logger logger = Logger();
 
 class ApiService {
-  final String baseUrl = Config.baseUrl; // Sử dụng baseUrl từ Config
+  final String baseUrl = Config.baseUrl;
 
   Future<Map<String, dynamic>?> signIn(String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/user/sign-in'), // Cập nhật URL
+        Uri.parse('$baseUrl/user/sign-in'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
 
+      // Log the full response for debugging
+      logger.d('Response Status: ${response.statusCode}');
+      logger.d('Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
-        // Chuyển đổi response body thành Map
-        return jsonDecode(response.body);
+        // Parse the response body
+        final Map<String, dynamic> responseData = jsonDecode(response.body);
+        logger.d('Login response: $responseData');
+
+        // Check for success status and user data
+        if (responseData.containsKey('status') &&
+            responseData['status'] == 'Oke' &&
+            responseData.containsKey('dataUser') &&
+            responseData['dataUser'] != null) {
+          // Retrieve the userId from the response
+          String userId =
+              responseData['dataUser']['id'] ?? ''; // Corrected key reference
+          if (userId.isEmpty) {
+            logger.e('UserId is missing in the response.');
+            return {
+              'error':
+                  'UserId missing in the response. Please check the server.'
+            };
+          }
+
+          // Save the userId to SharedPreferences
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('id', userId); // Store userId
+
+          logger.d('UserId saved to SharedPreferences: $userId');
+          return responseData; // Return response data
+        } else {
+          logger.e('Login failed or unexpected response structure');
+          return {
+            'error': 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'
+          };
+        }
       } else {
-        // Thêm thông báo lỗi dựa trên mã trạng thái
+        logger.e('Failed login. Status code: ${response.statusCode}');
         return {
           'error': 'Đăng nhập thất bại, vui lòng kiểm tra lại thông tin.'
         };
       }
     } catch (e) {
+      logger.e('Error occurred during sign-in: $e');
       return {'error': 'Đã xảy ra lỗi mạng, vui lòng thử lại.'};
     }
   }
