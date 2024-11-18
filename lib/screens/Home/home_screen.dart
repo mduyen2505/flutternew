@@ -6,6 +6,7 @@ import 'package:HDTech/screens/Home/Widget/popular_computer_bar.dart';
 import 'package:HDTech/screens/Home/Widget/trademark_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Ensure this import is present
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,15 +20,30 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Computer> _computers = []; // Store filtered computers
   List<String> bannerUrls = [];
   bool _isRefreshing = false;
+  bool _enableLocationServices = false; // Added missing field
+
   final GlobalKey<PopularComputerBarState> popularComputerBarKey =
       GlobalKey<PopularComputerBarState>();
 
   @override
   void initState() {
     super.initState();
+    _initializeSettings();
     _fetchBannerUrls();
     _fetchComputers(); // Fetch all computers initially without filters
     _refreshData();
+  }
+
+  // Initialize settings and location services
+  Future<void> _initializeSettings() async {
+    await _loadLocationSetting();
+  }
+
+  Future<void> _loadLocationSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _enableLocationServices = prefs.getBool('locationServices') ?? false;
+    });
   }
 
   // Hàm tải URL banner
@@ -63,11 +79,50 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _fetchComputers({Map<String, dynamic>? filters}) async {
-    // Fetch all computers if no filters are applied
-    List<Computer> computers = await loadComputers(filters: filters);
+    // Tải tất cả sản phẩm (có thể lấy từ API hoặc dữ liệu tĩnh)
+    List<Computer> allComputers = await loadComputers();
+
+    // Lọc theo các bộ lọc nếu filters có chứa giá trị
+    if (filters != null) {
+      if (filters['company'] != null && filters['company'] != 'All') {
+        // Lọc máy tính theo thương hiệu
+        allComputers = allComputers
+            .where((computer) => computer.company == filters['company'])
+            .toList();
+      }
+
+      if (filters['ram'] != null && filters['ram'] != 'All') {
+        // Lọc theo RAM
+        allComputers = allComputers
+            .where((computer) => computer.ram == filters['ram'])
+            .toList();
+      }
+
+      if (filters['cpu'] != null && filters['cpu'] != 'All') {
+        // Lọc theo CPU
+        allComputers = allComputers
+            .where((computer) => computer.cpu == filters['cpu'])
+            .toList();
+      }
+
+      if (filters['gpu'] != null && filters['gpu'] != 'All') {
+        // Lọc theo GPU
+        allComputers = allComputers
+            .where((computer) => computer.gpu == filters['gpu'])
+            .toList();
+      }
+
+      if (filters['memory'] != null && filters['memory'] != 'All') {
+        // Lọc theo bộ nhớ (Memory)
+        allComputers = allComputers
+            .where((computer) => computer.memory == filters['memory'])
+            .toList();
+      }
+    }
+
+    // Cập nhật danh sách máy tính sau khi lọc
     setState(() {
-      _computers =
-          computers; // Update the computers list with the filtered list
+      _computers = allComputers;
     });
   }
 
@@ -93,13 +148,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: const Color.fromARGB(255, 241, 241, 241),
                 elevation: 0,
                 title: CustomAppBar(
-                  onFilterChanged: _onFilterChanged, // Pass filter handler here
+                  onFilterChanged: _onFilterChanged,
+                  enableLocationServices:
+                      _enableLocationServices, // Pass the value here
                 ),
                 automaticallyImplyLeading: false,
                 pinned: true,
                 floating: false,
               ),
-
               SliverPadding(
                 padding: const EdgeInsets.all(20),
                 sliver: SliverList(
@@ -118,7 +174,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               BannerAppBar(
                                   bannerUrls: bannerUrls), // Hiển thị banner
                               const SizedBox(height: 10),
-                              const TrademarkAppBar(), // Hiển thị thương hiệu
+                              TrademarkAppBar(
+                                onCompanySelected: (String company) {
+                                  // Gọi hàm lọc khi chọn thương hiệu
+                                  _onFilterChanged({'company': company});
+                                },
+                              ), // Hiển thị thương hiệu
                               const SizedBox(height: 10),
                               PopularComputerBar(
                                 key: popularComputerBarKey,

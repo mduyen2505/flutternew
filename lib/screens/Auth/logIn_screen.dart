@@ -1,3 +1,4 @@
+// ignore_for_file: file_names
 import 'package:HDTech/models/api_service.dart';
 import 'package:HDTech/screens/Auth/register_screen.dart';
 import 'package:HDTech/screens/nav_bar_screen.dart'; // Import trang BottomNavBar
@@ -32,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final email = await _secureStorage.read(key: 'email');
     final password = await _secureStorage.read(key: 'password');
 
+    // ignore: avoid_print
     print('Loaded Email: $email, Password: $password');
 
     // If you want to keep the print statements, you can leave them as is
@@ -51,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (email != null && password != null) {
         _signIn(email, password); // Gọi hàm đăng nhập
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Không tìm thấy thông tin đăng nhập đã lưu.')),
@@ -120,7 +123,6 @@ class _LoginScreenState extends State<LoginScreen> {
           const SnackBar(content: Text('Đã xảy ra lỗi.')),
         );
       }
-      print('Caught error: $e');
     }
   }
 

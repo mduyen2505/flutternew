@@ -49,6 +49,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
             setState(() {
               currentIndex = 2;
             });
+
+            // Hiển thị thông báo đè lên, không làm giỏ hàng nhảy lên
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text("Chuyển đến giỏ hàng!"),
+                behavior:
+                    SnackBarBehavior.floating, // Đè lên, không đẩy nội dung
+                backgroundColor: Colors.black.withOpacity(0.8),
+                margin: const EdgeInsets.only(
+                  bottom: 80, // Đẩy Snackbar lên trên FloatingActionButton
+                  left: 16,
+                  right: 16,
+                ),
+                duration: const Duration(seconds: 2),
+              ),
+            );
           },
           shape: const CircleBorder(),
           backgroundColor: kprimaryColor,
@@ -60,6 +76,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
         ),
       ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       // Thanh điều hướng dưới cùng

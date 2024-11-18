@@ -13,7 +13,8 @@ class ItemsDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Format the price using the Vietnamese currency format
-    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
+    final formatCurrency =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
 
     return Padding(
       padding: const EdgeInsets.all(10.0), // Overall padding for content
@@ -22,7 +23,7 @@ class ItemsDetails extends StatelessWidget {
         children: [
           // Display productsTypeName before name
           Text(
-            "${popularComputerBar.productsTypeName} - ${popularComputerBar.name}",
+            "${popularComputerBar.company} - ${popularComputerBar.name}",
             style: const TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 25,
@@ -33,7 +34,8 @@ class ItemsDetails extends StatelessWidget {
 
           // Product price
           Text(
-            formatCurrency.format(popularComputerBar.price), // Format price with currency
+            formatCurrency
+                .format(popularComputerBar.price), // Format price with currency
             style: const TextStyle(
               fontWeight: FontWeight.w800,
               fontSize: 22,
@@ -56,9 +58,12 @@ class ItemsDetails extends StatelessWidget {
 
           // List of product attributes
           _buildDetailRow("Type: ", popularComputerBar.productsTypeName),
-          _buildDetailRow("Quantity in Stock: ", popularComputerBar.quantityInStock.toString()),
-          _buildDetailRow("Screen Size: ", "${popularComputerBar.inches} inches"),
-          _buildDetailRow("Screen Resolution: ", popularComputerBar.screenResolution),
+          _buildDetailRow("Quantity in Stock: ",
+              popularComputerBar.quantityInStock.toString()),
+          _buildDetailRow(
+              "Screen Size: ", "${popularComputerBar.inches} inches"),
+          _buildDetailRow(
+              "Screen Resolution: ", popularComputerBar.screenResolution),
           _buildDetailRow("CPU: ", popularComputerBar.cpu),
           _buildDetailRow("RAM: ", popularComputerBar.ram),
           _buildDetailRow("Memory: ", popularComputerBar.memory),

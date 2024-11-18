@@ -4,13 +4,8 @@ import 'package:HDTech/screens/Auth/screeens/onboarding.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:provider/provider.dart';
-
-
-
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,8 +46,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final LocalAuthentication _localAuth = LocalAuthentication();
-
   @override
   void initState() {
     super.initState();
@@ -72,15 +65,10 @@ class _SplashScreenState extends State<SplashScreen> {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print("User granted permission");
-    } else {
-      print("User declined or has not accepted permission");
-    }
+    } else {}
 
     // Lắng nghe thông báo
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print("Received a message: ${message.notification?.title}");
-    });
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {});
   }
 
   Future<void> _navigateToHome() async {
@@ -94,35 +82,8 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> _checkLocationPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-    if (permission == LocationPermission.deniedForever) {
-      print("Location permissions are permanently denied");
-    } else {
-      // Lấy vị trí
-      Position position = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.high);
-      print("Current position: $position");
-    }
-  }
-
-  Future<void> _authenticateWithFaceID() async {
-    bool authenticated = await _localAuth.authenticate(
-      localizedReason: 'Xác thực để tiếp tục',
-      options: const AuthenticationOptions(biometricOnly: true),
-    );
-    if (authenticated) {
-      print("Authentication successful");
-    } else {
-      print("Authentication failed");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return const SplashPage(); // Đảm bảo rằng SplashPage đã được định nghĩa và hoạt động
+    return const SplashPage();
   }
 }

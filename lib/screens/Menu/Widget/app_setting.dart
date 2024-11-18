@@ -11,10 +11,10 @@ class AppSetting extends StatefulWidget {
   const AppSetting({super.key});
 
   @override
-  _AppSettingState createState() => _AppSettingState();
+  AppSettingState createState() => AppSettingState();
 }
 
-class _AppSettingState extends State<AppSetting> {
+class AppSettingState extends State<AppSetting> {
   bool _enableFaceIDForLogin = false;
   bool _enablePushNotifications = false;
   bool _enableLocationServices = false;
@@ -72,6 +72,12 @@ class _AppSettingState extends State<AppSetting> {
     await _secureStorage.delete(key: 'email');
     await _secureStorage.delete(key: 'password');
   }
+  
+  Future<bool> getEnableLocationServices() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getBool('locationServices') ?? false;
+}
+
 
   @override
   Widget build(BuildContext context) {

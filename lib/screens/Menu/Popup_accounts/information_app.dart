@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Information extends StatelessWidget {
   const Information({super.key});
@@ -9,7 +10,11 @@ class Information extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Information'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: SvgPicture.asset(
+            'images/icons/alt-arrow-left-svgrepo-com.svg', // Update with your icon path
+            width: 24,
+            height: 24,
+          ),
           onPressed: () {
             Navigator.pop(context); // Quay lại trang trước
           },

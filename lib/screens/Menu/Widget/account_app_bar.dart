@@ -1,8 +1,9 @@
 import 'package:HDTech/models/account_service.dart';
 import 'package:HDTech/models/user_model.dart'; // Assuming you have the User model
 import 'package:HDTech/screens/Menu/Popup_accounts/delete_account.dart';
+import 'package:HDTech/screens/Menu/Popup_accounts/order_status.dart';
 import 'package:HDTech/screens/Menu/Popup_accounts/update_user_popup.dart'; // Add this import for the popup
-import 'package:HDTech/screens/Menu/Widget/information_app.dart';
+import 'package:HDTech/screens/Menu/Popup_accounts/information_app.dart';
 import 'package:HDTech/screens/nav_bar_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -232,9 +233,14 @@ class _AccountPageState extends State<AccountPage> {
           ),
           const SizedBox(height: 16),
 
-          // Button for Shipping Address
+          // Button for Order status
           _buildAccountButton(
-              'Order status', "images/icons/cart-2-svgrepo-com.svg", () {}),
+              'Order status', "images/icons/cart-2-svgrepo-com.svg", () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const OrderStatusPage()),
+            );
+          }),
           const SizedBox(height: 16),
 
           // Button for Payment Info

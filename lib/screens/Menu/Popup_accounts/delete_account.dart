@@ -8,9 +8,14 @@ class DeleteAccount extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Delete Account'),
+          backgroundColor: Colors.white, // Set dialog background color to white
+          title: const Text(
+            'Delete Account',
+            style: TextStyle(color: Colors.black), // Ensure text is visible
+          ),
           content: const Text(
             'You need to contact our Admin team or visit the HDTech center for account deletion assistance.',
+            style: TextStyle(color: Colors.black), // Set content text color
           ),
           actions: [
             TextButton(
@@ -18,7 +23,13 @@ class DeleteAccount extends StatelessWidget {
                 Navigator.of(context).pop(); // Close the dialog
                 Navigator.of(context).pop(); // Close the DeleteAccount screen
               },
-              child: const Text('OK'),
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold, // Make "OK" text bold
+                  color: Colors.blue, // Set color for OK text
+                ),
+              ),
             ),
           ],
         );

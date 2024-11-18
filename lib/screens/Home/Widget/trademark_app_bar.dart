@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
 
 class TrademarkAppBar extends StatefulWidget {
-  const TrademarkAppBar({super.key});
+  final Function(String)
+      onCompanySelected; // Callback để truyền lại thương hiệu
+  const TrademarkAppBar({super.key, required this.onCompanySelected});
 
   @override
   TrademarkAppBarState createState() => TrademarkAppBarState();
@@ -16,6 +18,9 @@ class TrademarkAppBarState extends State<TrademarkAppBar> {
     setState(() {
       selectedBrand = brandName;
     });
+
+    // Gọi callback để truyền thương hiệu đã chọn về HomeScreen
+    widget.onCompanySelected(brandName);
   }
 
   @override

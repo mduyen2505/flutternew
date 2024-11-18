@@ -1,3 +1,4 @@
+import 'package:HDTech/constants.dart'; // Import constants.dart
 import 'package:HDTech/models/computer_model.dart';
 import 'package:flutter/material.dart';
 
@@ -42,6 +43,7 @@ class FilterDrawerState extends State<FilterDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: Colors.white, // Set drawer background color to white
       child: SingleChildScrollView(
         // Enable scrolling
         child: Padding(
@@ -76,6 +78,7 @@ class FilterDrawerState extends State<FilterDrawer> {
               _sendUpdatedFilters();
             });
           },
+          activeColor: kPrimaryColor, // Set radio button color to primary color
         );
       }).toList(),
     );

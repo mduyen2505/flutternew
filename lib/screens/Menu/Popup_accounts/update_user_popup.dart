@@ -18,6 +18,7 @@ class UpdateUserPopup extends StatelessWidget {
         TextEditingController(text: user.phone);
 
     return AlertDialog(
+      backgroundColor: Colors.white, // Set the dialog background to white
       title: const Text('Update User Info'),
       content: Column(
         mainAxisSize: MainAxisSize.min,

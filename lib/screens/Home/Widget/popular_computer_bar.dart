@@ -150,18 +150,18 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                           Navigator.of(context)
                               .pop(false); // Nếu người dùng chọn "No"
                         },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
                         child: Text(
                           "No",
                           style: TextStyle(
                             color: Colors.red[400],
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
@@ -173,18 +173,18 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                           Navigator.of(context)
                               .pop(true); // Nếu người dùng chọn "Yes"
                         },
-                        child: Text(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 30),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                        ),
+                        child: const Text(
                           "Yes",
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
                           ),
                         ),
                       ),
@@ -297,7 +297,7 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8.0),
                                     child: Text(
-                                      '${computer.productsTypeName} - ${computer.name}', // Concatenate productsTypeName and name
+                                      '${computer.company} ${computer.name}', // Concatenate productsTypeName and name
                                       style: const TextStyle(
                                         fontSize: 17,
                                         fontWeight: FontWeight.bold,
@@ -340,51 +340,28 @@ class PopularComputerBarState extends State<PopularComputerBar> {
                                       return; // Nếu sau khi đăng nhập, người dùng vẫn chưa đăng nhập, không tiếp tục
                                   }
 
-                                  provider.addToCart(computer,
-                                      quantity:
-                                          1); // Thêm sản phẩm vào giỏ hàng
+                                  // Lấy userId từ SharedPreferences
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  final userId = prefs
+                                      .getString('id'); // Lấy userId đã lưu
 
-                                  // Hiển thị SnackBar để xác nhận
-                                  final snackBar = SnackBar(
-                                    content: const Row(
-                                      children: [
-                                        Icon(Icons.check_circle,
-                                            color: Colors.white, size: 20),
-                                        SizedBox(width: 8),
-                                        Expanded(
-                                          child: Text(
-                                            "Successfully added to cart!",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 15,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    backgroundColor: Colors.green[500],
-                                    behavior: SnackBarBehavior.floating,
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    action: SnackBarAction(
-                                      label: 'Close',
-                                      textColor: Colors.white,
-                                      onPressed: () {
-                                        ScaffoldMessenger.of(context)
-                                            .hideCurrentSnackBar();
-                                      },
-                                    ),
-                                    duration: const Duration(seconds: 1),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
+                                  if (userId == null) {
+                                    // Nếu không có userId, yêu cầu người dùng đăng nhập lại hoặc thông báo lỗi
+                                    return;
+                                  }
+
+                                  // Gọi CartProvider để thêm sản phẩm vào giỏ hàng
+                                  await provider.addItem(
+                                      userId,
+                                      computer.id.toString(),
+                                      1); // Đảm bảo chuyển id thành String
+                                  // ignore: use_build_context_synchronously
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Sản phẩm đã được thêm vào giỏ hàng')),
                                   );
-
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(snackBar);
                                 },
                                 child: Container(
                                   width: 35,

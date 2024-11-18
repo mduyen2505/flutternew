@@ -3,6 +3,7 @@ import 'package:HDTech/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:HDTech/screens/Checkout/check_out_screen.dart';
 
 final formatCurrency = NumberFormat.currency(
     locale: 'vi_VN', symbol: 'VNĐ'); // Format currency in VND
@@ -45,7 +46,7 @@ class CheckOutBox extends StatelessWidget {
                   ),
                   Text(
                     formatCurrency
-                        .format(provider.totalPrice), // Hiển thị subtotal
+                        .format(provider.subtotal), // Hiển thị subtotal
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -78,8 +79,19 @@ class CheckOutBox extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {},
+               ElevatedButton(
+                onPressed: () {
+                  // Lấy userId hoặc cartId từ provider hoặc bất kỳ dữ liệu cần thiết nào
+                  final userId = "user_id"; // Thay thế bằng dữ liệu thực tế của bạn
+
+                  // Chuyển hướng đến trang chi tiết giỏ hàng
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckOutScreen(cartId: userId), // Truyền cartId hoặc userId
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kprimaryColor,
                   minimumSize: const Size(double.infinity, 55),

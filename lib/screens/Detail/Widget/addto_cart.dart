@@ -109,76 +109,61 @@ class _AddToCartState extends State<AddToCart> {
               ),
             ),
             
-            // Nút "Add to Cart" với SnackBar tùy chỉnh
-            GestureDetector(
-               onTap: () async {
-                // Kiểm tra xem người dùng có đăng nhập hay không
-                if (!_isLoggedIn) {
-                  // Nếu chưa đăng nhập, yêu cầu người dùng đăng nhập
-                    bool shouldLogin = await _showLoginDialog(context); // Hiển thị hộp thoại yêu cầu đăng nhập
-                  if (!shouldLogin) return; // Nếu người dùng không muốn đăng nhập, không làm gì
-                  await _navigateToLogin(); // Điều hướng đến màn hình đăng nhập
-                  if (!_isLoggedIn) return; // Nếu sau khi đăng nhập người dùng vẫn chưa đăng nhập, không tiếp tục
-                }
+GestureDetector(
+  onTap: () async {
+    // Kiểm tra xem người dùng có đăng nhập hay không
+    if (!_isLoggedIn) {
+      // Nếu chưa đăng nhập, yêu cầu người dùng đăng nhập
+      bool shouldLogin = await _showLoginDialog(context); // Hiển thị hộp thoại yêu cầu đăng nhập
+      if (!shouldLogin) return; // Nếu người dùng không muốn đăng nhập, không làm gì
+      await _navigateToLogin(); // Điều hướng đến màn hình đăng nhập
+      if (!_isLoggedIn) return; // Nếu sau khi đăng nhập người dùng vẫn chưa đăng nhập, không tiếp tục
+    }
 
-                // Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng
-                provider.addToCart(widget.popularComputerBar, quantity: currentIndex);
+    // Lấy userId từ SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
+    final userId = prefs.getString('id'); // Lấy userId đã lưu
 
-                final snackBar = SnackBar(
-                  content: Row(
-                    children: [
-                      const Icon(Icons.check_circle, color: Colors.white, size: 20),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          "Successfully added to cart!",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  backgroundColor: Colors.green[500],
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  action: SnackBarAction(
-                    label: 'Close',
-                    textColor: Colors.white,
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    },
-                  ),
-                  duration: const Duration(seconds: 1),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                );
+    if (userId == null) {
+      // Nếu không có userId, yêu cầu người dùng đăng nhập lại hoặc thông báo lỗi
+      
+      return;
+    }
 
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              },
-              
-              child: Container(
-                height: 55,
-                decoration: BoxDecoration(
-                  color: kprimaryColor,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 50),
-                alignment: Alignment.center,
-                child: const Text(
-                  "Add to Cart",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ),
-            ),
+    // Nếu người dùng đã đăng nhập, thêm sản phẩm vào giỏ hàng
+    final productId = widget.popularComputerBar.id?.toString(); // Lấy ID sản phẩm từ đối tượng popularComputerBar
+    final quantity = currentIndex;
+
+    // Gọi CartProvider để thêm sản phẩm vào giỏ hàng
+    if (productId != null) {
+      provider.addItem(userId, productId, quantity);
+    }
+
+    // Thêm thông báo sau khi thêm vào giỏ hàng
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Sản phẩm đã được thêm vào giỏ hàng')),
+    );
+  },
+  child: Container(
+    height: 55,
+    decoration: BoxDecoration(
+      color: kprimaryColor,
+      borderRadius: BorderRadius.circular(50),
+    ),
+    padding: const EdgeInsets.symmetric(horizontal: 50),
+    alignment: Alignment.center,
+    child: const Text(
+      "Add to Cart",
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+    ),
+  ),
+),
+
           ],
         ),
       ),

@@ -45,7 +45,10 @@ class PopularComputerBarState extends State<PopularComputerBar> {
         final filteredComputers = computers.where((computer) {
           final query = widget.searchQuery.toLowerCase();
           return computer.name.toLowerCase().contains(query) ||
-              computer.productsTypeName.toLowerCase().contains(query);
+              computer.productsTypeName.toLowerCase().contains(query) ||
+              computer.company
+                  .toLowerCase()
+                  .contains(query); // Tìm kiếm theo company
         }).toList();
 
         return RefreshIndicator(
@@ -136,7 +139,7 @@ class _ComputerItemState extends State<ComputerItem> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      '${widget.computer.productsTypeName} - ${widget.computer.name}', // Display productsTypeName before name
+                      '${widget.computer.company} ${widget.computer.name}', // Display productsTypeName before name
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -187,10 +190,5 @@ class _ComputerItemState extends State<ComputerItem> {
         ),
       ),
     );
-  }
-
-  void _addToCart(String computerName) {
-    // Replace print with a logging framework if desired
-    debugPrint('Thêm $computerName vào giỏ hàng!');
   }
 }
