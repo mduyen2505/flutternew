@@ -1,7 +1,14 @@
+import 'package:HDTech/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:HDTech/models/checkout_service.dart';
-import 'package:HDTech/models/checkout_model.dart'; // Đảm bảo import đúng
+import 'package:HDTech/models/checkout_model.dart'; 
+import 'package:vnpay_flutter/vnpay_flutter.dart'; 
+import 'package:HDTech/models/config.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+
 
 final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'VNĐ');
 
@@ -12,10 +19,9 @@ class CheckOutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userId = cartId; // Lấy userId từ tham số đầu vào
 
     return FutureBuilder<CheckoutDetails>(
-      future: CheckoutService.getCheckoutDetails(userId),
+      future: CheckoutService.getCheckoutDetails(cartId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
@@ -40,34 +46,50 @@ class CheckOutScreen extends StatelessWidget {
         final orderTotal = checkoutDetails.orderTotal?.toDouble() ?? 0.0;
 
         return Scaffold(
-          appBar: AppBar(
-            title: const Text("Thanh toán"),
-            centerTitle: true,
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
+  appBar: AppBar(
+    title: const Text(
+      "ORDER DETAILS",
+      style: TextStyle(fontWeight: FontWeight.bold), // Đảm bảo tiêu đề AppBar in đậm
+    ),
+    centerTitle: true,
+    backgroundColor: Colors.white,
+    leading: IconButton(
+      icon: const Icon(Icons.arrow_back_ios),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    ),
+  ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "Thông tin đơn hàng",
+                  "Order Information",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                const SizedBox(height: 10),
-                _buildInputField("Tên", controller: TextEditingController(text: "Nguyễn Văn A")),
-                _buildInputField("Số điện thoại", controller: TextEditingController(text: "123456789")),
-                _buildInputField("Email", controller: TextEditingController(text: "example@mail.com")),
-                _buildInputField("Địa chỉ giao hàng", controller: TextEditingController(text: "Số 123, Hà Nội")),
+                const SizedBox(height: 20), 
+                Padding(
+  padding: const EdgeInsets.only(bottom: 15.0),
+  child: _buildInputField("Name", controller: TextEditingController()), 
+),
+Padding(
+  padding: const EdgeInsets.only(bottom: 15.0), 
+  child: _buildInputField("Phone Number", controller: TextEditingController()), 
+),
+Padding(
+  padding: const EdgeInsets.only(bottom: 15.0), 
+  child: _buildInputField("Email", controller: TextEditingController()), 
+),
+Padding(
+  padding: const EdgeInsets.only(bottom: 15.0), 
+  child: _buildInputField("Delivery Address", controller: TextEditingController()), 
+),
+
                 const SizedBox(height: 20),
                 const Text(
-                  "Chi tiết đơn hàng",
+                  "Order Details",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 const SizedBox(height: 10),
@@ -82,7 +104,7 @@ class CheckOutScreen extends StatelessWidget {
                           style: const TextStyle(fontSize: 18),
                         ),
                         subtitle: Text(
-                          "Số lượng: ${product.quantity}",
+                          "Quantity: ${product.quantity}",
                           style: const TextStyle(fontSize: 16),
                         ),
                         trailing: Text(
@@ -94,27 +116,27 @@ class CheckOutScreen extends StatelessWidget {
                   ),
                 ),
                 const Divider(),
-                _buildSummaryRow("Tổng giá trị", totalPrice),
+                _buildSummaryRow("Total Value", totalPrice),
                 _buildSummaryRow("VAT", vatOrder),
-                _buildSummaryRow("Phí vận chuyển", shippingFee),
+                _buildSummaryRow("Shipping Fee", shippingFee),
                 const Divider(),
                 _buildSummaryRow(
-                  "Tổng cộng",
+                  "Grand Total",
                   orderTotal,
                   isBold: true,
-                  color: Colors.red,
+                  color: kprimaryColor,
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    _handlePayment(context);
+                    _handlePayment(context, checkoutDetails);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor:kprimaryColor,
                     minimumSize: const Size(double.infinity, 55),
                   ),
                   child: const Text(
-                    "Thanh toán ngay",
+                    "Pay Now",
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -168,10 +190,67 @@ class CheckOutScreen extends StatelessWidget {
     );
   }
 
-  void _handlePayment(BuildContext context) {
-    // Xử lý thanh toán
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Chức năng thanh toán chưa được triển khai')),
+   void _handlePayment(BuildContext context, CheckoutDetails checkoutDetails) async {
+  final orderData = {
+    "userId": checkoutDetails.userId,  
+    "cartId": checkoutDetails.cartId, 
+    "shippingAddress": {
+      "address": "123 Main Street",  
+      "city": "Ho Chi Minh",
+      "country": "Vietnam"
+    },
+    "productIds": checkoutDetails.products.map((p) => p.productId).toList(),
+    "name": "John Doe", 
+    "phone": "0123456789",
+    "email": "john.doe@example.com"
+  };
+
+  try {
+    // API calls
+    final orderResponse = await http.post(
+      Uri.parse('${Config.baseUrl}/order/create'),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode(orderData),
     );
+
+    if (orderResponse.statusCode == 200) {
+      final orderResponseData = json.decode(orderResponse.body);
+      final orderId = orderResponseData['data']['_id'];
+      final returnUrl = 'https://';
+
+      final paymentResponse = await http.post(
+        Uri.parse('${Config.baseUrl}/payments/create_payment'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          "orderId": orderId,
+          "returnUrl": returnUrl,
+        }),
+      );
+
+      if (paymentResponse.statusCode == 200) {
+        final paymentUrl = json.decode(paymentResponse.body)['paymentURL'];
+
+        await VNPAYFlutter.instance.show(
+          paymentUrl: paymentUrl,
+          onPaymentSuccess: (params) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment Successful!')));
+          },
+          onPaymentError: (params) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Payment Failed')));
+          },
+          onWebPaymentComplete: () {
+            print("Web payment completed");
+          },
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Unable to create payment URL')));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Unable to create order')));
+    }
+  } catch (error) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('An error occurred')));
   }
+}
+
 }

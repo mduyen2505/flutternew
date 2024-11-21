@@ -6,6 +6,8 @@ class CheckoutDetails {
   final double vatOrder;
   final double shippingFee;
   final double orderTotal;
+  final String cartId;  
+  final String userId;  
 
   CheckoutDetails({
     required this.products,
@@ -13,19 +15,14 @@ class CheckoutDetails {
     required this.vatOrder,
     required this.shippingFee,
     required this.orderTotal,
+    required this.cartId,
+    required this.userId,
   });
 
   factory CheckoutDetails.fromJson(Map<String, dynamic> json) {
-    // Calculate base total price from JSON
     final basePrice = json['totalPrice'].toDouble();
-
-    // Fixed VAT rate (10% of total price)
     final calculatedVAT = basePrice * 0.1;
-
-    // Shipping fee calculation based on total price
     final calculatedShippingFee = calculateShippingFee(basePrice);
-
-    // Calculate final order total
     final calculatedOrderTotal = basePrice + calculatedVAT + calculatedShippingFee;
 
     return CheckoutDetails(
@@ -36,17 +33,18 @@ class CheckoutDetails {
       vatOrder: calculatedVAT,
       shippingFee: calculatedShippingFee,
       orderTotal: calculatedOrderTotal,
+      cartId: json['cartId'],  
+      userId: json['userId'],  
     );
   }
 
-  // Helper method to calculate shipping fee based on order value
   static double calculateShippingFee(double totalPrice) {
-    if (totalPrice >= 50000000) {  // Over 50M VND
-      return 0.0;  // Free shipping
-    } else if (totalPrice >= 20000000) {  // Over 20M VND
-      return 30000.0;  // 30k VND shipping
+    if (totalPrice >= 50000000) {
+      return 0.0;
+    } else if (totalPrice >= 20000000) {
+      return 30000.0;
     } else {
-      return 50000.0;  // Standard 50k VND shipping
+      return 50000.0;
     }
   }
 }
